@@ -1,0 +1,1 @@
+add_library(fdr STATIC dllist.c jval.c jrb.c debug_printf.c)
