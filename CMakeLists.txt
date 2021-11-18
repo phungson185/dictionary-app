@@ -23,5 +23,5 @@ add_definitions(${GTK3_CFLAGS_OTHER} -rdynamic)
 
 message(STATUS "Include: ${GTK3_INCLUDE_DIRS}\n LIB_DIR: ${GTK3_LIBRARY_DIRS} \n CFLAGS_OTHERS: ${GTK3_CFLAGS_OTHER} \n LIBS: ${GTK3_LIBRARIES}")
 
-add_executable(data ${PROJECT_SOURCE_DIR}/src/data.c)
-target_link_libraries(data ${GTK3_LIBRARIES} fdr bt)
+add_executable(dict ${PROJECT_SOURCE_DIR}/src/dict.c)
+target_link_libraries(dict ${GTK3_LIBRARIES} fdr bt)
