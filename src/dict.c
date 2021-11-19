@@ -33,6 +33,7 @@ GtkWidget *textview1;
 GtkWidget *textview2;
 GtkWidget *textview3;
 GtkWidget *textview4;
+GtkWidget *textview_his;
 
 GtkWidget *lbl_history;
 GtkWidget *lbl_list_diff;
@@ -79,10 +80,13 @@ int main(int argc, char *argv[])
 
     builder = gtk_builder_new_from_file("../src/dict-app.glade");
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
+    
+    gtk_builder_connect_signals(builder, NULL);
 
     searchentry = GTK_WIDGET(gtk_builder_get_object(builder, "searchentry"));
 
     textview1 = GTK_WIDGET(gtk_builder_get_object(builder, "textview1"));
+    textview_his = GTK_WIDGET(gtk_builder_get_object(builder, "textview_his"));
 
     comple = gtk_entry_completion_new();
     gtk_entry_completion_set_text_column(comple, 0);
@@ -150,7 +154,7 @@ void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     gtk_list_store_clear(list);
     if (strcmp(gettext, "") == 0)
     {
-        set_mean_textview1_text("");
+        set_mean_textview_text(textview1,"");
     }
     else
     {
@@ -166,43 +170,45 @@ void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
             }
             if (k == 0)
             {
+                count++;
                 gtk_list_store_append(list, &Iter);
                 gtk_list_store_set(list, &Iter, 0, eng, -1);
             }
             k = 0;
+            if(count > 20) break;
         }
     }
     free(eng);
     free(vie);
 }
 
-void set_mean_textview1_text(char *text)
+void set_mean_textview_text(GtkWidget* textview, char *text)
 {
     GtkTextBuffer *buffer;
-    buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview1));
+    buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
     if (buffer == NULL)
     {
         printf("Get buffer fail!");
         buffer = gtk_text_buffer_new(NULL);
     }
     gtk_text_buffer_set_text(buffer, text, -1);
-    gtk_text_view_set_buffer(GTK_TEXT_VIEW(textview1), buffer);
+    gtk_text_view_set_buffer(GTK_TEXT_VIEW(textview), buffer);
 }
 
 void translate()
 {
-    char value[MAX];
-    char buffer[MAX];
+    char *value = (char *)malloc(sizeof(char) * MAX);
+    char *buffer = (char *)malloc(sizeof(char) * MAX);
     int rsize;
     gchar gettext[100];
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
     if (strcmp(gettext, "") == 0)
     {
-        set_mean_textview1_text("");
+        set_mean_textview_text(textview1,"");
     }
     else
     {
-        check_his = 1;
+        //check_his = 1;
         if (strcmp(buftrans, gettext) != 0)
         {
             strcpy(buftrans, gettext);
@@ -212,13 +218,16 @@ void translate()
             strcpy(htr, buffer);
         }
         if (btsel(tudien, gettext, value, MAX, &rsize))
-            set_mean_textview1_text("Không tìm thấy từ bạn cần tìm");
+            set_mean_textview_text(textview1,"Không tìm thấy từ bạn cần tìm");
         else
         {
-            printf("%s\n",value);
-            set_mean_textview1_text(value);
-            check_trans = 100;
+            set_mean_textview_text(textview1,value);
+            // check_trans = 100;
         }
     }
-    btcls(tudien);
+
+    set_mean_textview_text(textview_his, htr);
+
+    free(value);
+    free(buffer);
 }
