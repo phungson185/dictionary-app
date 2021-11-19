@@ -17,47 +17,11 @@ GtkEntryCompletion *comple;
 GtkListStore *list;
 GtkTreeIter Iter;
 
-GtkWidget *window_history;
 GtkWidget *window_advanced;
-GtkWidget *window_diffword;
-GtkWidget *window_list_diff;
-GtkWidget *window_game;
-GtkWidget *window_about;
 
-GtkEntry *searchentry;
-GtkEntry *entry_newword;
-GtkEntry *entry_meanword;
-GtkEntry *entry_del;
+GtkEntry *searchentry, *entry_newword, *entry_meanword, *entry_del;
 
-GtkWidget *textview1;
-GtkWidget *textview2;
-GtkWidget *textview3;
-GtkWidget *textview4;
-GtkWidget *textview_his;
-
-GtkWidget *lbl_history;
-GtkWidget *lbl_list_diff;
-GtkWidget *lbl_suggest1;
-GtkWidget *lbl_suggest2;
-GtkWidget *lbl_suggest3;
-GtkWidget *lbl_suggest4;
-GtkWidget *lbl_suggest5;
-GtkWidget *lbl_suggest6;
-GtkWidget *lbl_suggest7;
-GtkWidget *lbl_suggest8;
-GtkWidget *lbl_suggest9;
-GtkWidget *lbl_suggest10;
-GtkWidget *lbl_yeucau;
-GtkWidget *lbl_eng;
-GtkWidget *lbl_vie1;
-GtkWidget *lbl_vie2;
-GtkWidget *lbl_vie3;
-GtkWidget *lbl_vie4;
-
-GtkWidget *check_vie1;
-GtkWidget *check_vie2;
-GtkWidget *check_vie3;
-GtkWidget *check_vie4;
+GtkWidget *textview1, *textview2, *textview3, *textview4, *textview_his;
 
 BTA *tudien;
 BTA *diff;
@@ -68,10 +32,10 @@ char htr[MAX];
 char buftrans[MAX];
 // char eng[MAX];
 // char vie[MAX];
-char key[MAX];
 
 void datainit();
 void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
+void set_mean_textview_text(GtkWidget *textview, char *text);
 void translate();
 
 int main(int argc, char *argv[])
@@ -80,12 +44,15 @@ int main(int argc, char *argv[])
 
     builder = gtk_builder_new_from_file("../src/dict-app.glade");
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
-    
+
     gtk_builder_connect_signals(builder, NULL);
 
     searchentry = GTK_WIDGET(gtk_builder_get_object(builder, "searchentry"));
+    entry_newword = GTK_WIDGET(gtk_builder_get_object(builder, "entry_newword"));
+    entry_meanword = GTK_WIDGET(gtk_builder_get_object(builder, "entry_meanword"));
 
     textview1 = GTK_WIDGET(gtk_builder_get_object(builder, "textview1"));
+    textview2 = GTK_WIDGET(gtk_builder_get_object(builder, "textview2"));
     textview_his = GTK_WIDGET(gtk_builder_get_object(builder, "textview_his"));
 
     comple = gtk_entry_completion_new();
@@ -96,6 +63,7 @@ int main(int argc, char *argv[])
 
     g_signal_connect(searchentry, "key_press_event", G_CALLBACK(on_key_press), NULL);
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(window_advanced, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
     datainit();
     tudien = btopn("dict.bt", 0, 0);
@@ -110,11 +78,10 @@ int main(int argc, char *argv[])
 void datainit()
 {
     btinit();
-    BTA *tudien;
-    BTA *diff;
     FILE *p;
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
+    char *key = (char *)malloc(sizeof(char) * MAX);
 
     diff = btcrt("favourite_word.bt", 0, 0);
     tudien = btcrt("dict.bt", 0, 0);
@@ -138,6 +105,7 @@ void datainit()
     fclose(p);
     free(eng);
     free(vie);
+    free(key);
     btcls(diff);
     btcls(tudien);
 }
@@ -154,7 +122,7 @@ void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     gtk_list_store_clear(list);
     if (strcmp(gettext, "") == 0)
     {
-        set_mean_textview_text(textview1,"");
+        set_mean_textview_text(textview1, "");
     }
     else
     {
@@ -175,14 +143,15 @@ void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
                 gtk_list_store_set(list, &Iter, 0, eng, -1);
             }
             k = 0;
-            if(count > 20) break;
+            if (count > 20)
+                break;
         }
     }
     free(eng);
     free(vie);
 }
 
-void set_mean_textview_text(GtkWidget* textview, char *text)
+void set_mean_textview_text(GtkWidget *textview, char *text)
 {
     GtkTextBuffer *buffer;
     buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
@@ -199,12 +168,13 @@ void translate()
 {
     char *value = (char *)malloc(sizeof(char) * MAX);
     char *buffer = (char *)malloc(sizeof(char) * MAX);
+    btpos(tudien, ZSTART);
     int rsize;
-    gchar gettext[100];
+    gchar gettext[MAX];
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
     if (strcmp(gettext, "") == 0)
     {
-        set_mean_textview_text(textview1,"");
+        set_mean_textview_text(textview1, "");
     }
     else
     {
@@ -218,10 +188,10 @@ void translate()
             strcpy(htr, buffer);
         }
         if (btsel(tudien, gettext, value, MAX, &rsize))
-            set_mean_textview_text(textview1,"Không tìm thấy từ bạn cần tìm");
+            set_mean_textview_text(textview1, "Không tìm thấy từ bạn cần tìm");
         else
         {
-            set_mean_textview_text(textview1,value);
+            set_mean_textview_text(textview1, value);
             // check_trans = 100;
         }
     }
@@ -230,4 +200,59 @@ void translate()
 
     free(value);
     free(buffer);
+}
+
+void add_to_dict()
+{
+    printf("%d\n",1);
+    char *value = (char *)malloc(sizeof(char) * MAX);
+    int rsize;
+    gchar new_word[MAX];
+    gchar mean_word[MAX];
+    btpos(tudien, ZSTART);
+    strcpy(new_word, gtk_entry_get_text(GTK_ENTRY(entry_newword)));
+    strcpy(mean_word, gtk_entry_get_text(GTK_ENTRY(entry_meanword)));
+    if (strcmp(new_word, "") == 0 && strcmp(mean_word, "") == 0)
+    {
+        gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập từ mới và nghĩa cần thêm");
+    }
+    else
+    {
+        if (strcmp(new_word, "") == 0)
+        {
+            gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập từ mới cần thêm");
+        }
+        else if (strcmp(mean_word, "") == 0)
+        {
+            gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập nghĩa của từ cần thêm");
+        }
+        else
+        {
+            if (!btsel(tudien, new_word, value, MAX, &rsize))
+            {
+                gtk_label_set_text(GTK_LABEL(textview2), "Từ này đã có trong từ điển");
+            }
+            else
+            {
+                if (!btins(tudien, new_word, mean_word, MAX))
+                    gtk_label_set_text(GTK_LABEL(textview2), "Đã thêm thành công");
+                else
+                    gtk_label_set_text(GTK_LABEL(textview2), "Thêm thất bại, chương trình lỗi...");
+            }
+        }
+    }
+    free(value);
+}
+
+void extend()
+{
+    GtkBuilder *builder;
+
+    builder = gtk_builder_new_from_file("../src/dict-app.glade");
+
+    window_advanced = GTK_WIDGET(gtk_builder_get_object(builder, "window_advanced"));
+    gtk_builder_connect_signals(builder, NULL);
+
+    g_object_unref(builder);
+    gtk_widget_show(window_advanced);
 }
