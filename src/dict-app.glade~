@@ -468,7 +468,7 @@ Phùng Đình Sơn		20184189
             <property name="can_focus">False</property>
             <property name="margin_top">5</property>
             <property name="margin_bottom">9</property>
-            <property name="label" translatable="yes">Powered by</property>
+            <property name="label" translatable="yes">Cung cấp bởi</property>
           </object>
           <packing>
             <property name="x">15</property>
@@ -495,7 +495,7 @@ Phùng Đình Sơn		20184189
             </child>
           </object>
           <packing>
-            <property name="x">88</property>
+            <property name="x">96</property>
             <property name="y">316</property>
           </packing>
         </child>

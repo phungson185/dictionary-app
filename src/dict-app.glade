@@ -85,12 +85,13 @@ Phùng Đình Sơn		20184189
         </child>
         <child>
           <object class="GtkButton">
-            <property name="label" translatable="yes">Thêm</property>
+            <property name="label" translatable="yes">   Thêm</property>
             <property name="width_request">81</property>
             <property name="height_request">73</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="image_position">top</property>
             <signal name="clicked" handler="add_to_dict" swapped="no"/>
             <accelerator key="a" signal="activate" modifiers="GDK_CONTROL_MASK"/>
           </object>
@@ -151,6 +152,39 @@ Phùng Đình Sơn		20184189
           <packing>
             <property name="x">15</property>
             <property name="y">159</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-add</property>
+          </object>
+          <packing>
+            <property name="x">302</property>
+            <property name="y">45</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-edit</property>
+          </object>
+          <packing>
+            <property name="x">390</property>
+            <property name="y">45</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-delete</property>
+          </object>
+          <packing>
+            <property name="x">344</property>
+            <property name="y">113</property>
           </packing>
         </child>
       </object>
@@ -393,8 +427,8 @@ Phùng Đình Sơn		20184189
             <property name="receives_default">True</property>
             <property name="always_show_image">True</property>
             <signal name="clicked" handler="translate" swapped="no"/>
-            <accelerator key="Return" signal="clicked"/>
             <accelerator key="Return" signal="activate"/>
+            <accelerator key="Return" signal="clicked"/>
           </object>
           <packing>
             <property name="x">703</property>

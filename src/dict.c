@@ -26,7 +26,6 @@ BTA *note;
 char htr[MAX];
 char buftrans[MAX];
 
-void datainit();
 void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
 void set_mean_textview_text(GtkWidget *textview, char *text);
 void translate();
@@ -54,49 +53,13 @@ int main(int argc, char *argv[])
     g_signal_connect(searchentry, "key_press_event", G_CALLBACK(on_key_press), NULL);
     g_signal_connect(window_main, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
-    datainit();
-    dict = btopn("dict.bt", 0, 0);
+    dict = btopn("../src/dict.bt", 0, 0);
 
     g_object_unref(builder);
     gtk_widget_show(window_main);
     gtk_main();
 
     return 0;
-}
-
-void datainit()
-{
-    btinit();
-    FILE *p;
-    char *eng = (char *)malloc(sizeof(char) * MAX);
-    char *vie = (char *)malloc(sizeof(char) * MAX);
-    char *key = (char *)malloc(sizeof(char) * MAX);
-
-    note = btcrt("note.bt", 0, 0);
-    dict = btcrt("dict.bt", 0, 0);
-    if ((p = fopen("../src/data.txt", "r")) == NULL)
-    {
-        printf("Loi khong the mo file.\n");
-        return;
-    }
-    while (fgets(key, MAX, p))
-    {
-        for (int i = 0; i < strlen(key); i++)
-        {
-            if (key[i] == '_')
-            {
-                strcpy(eng, strtok(key, "_"));
-                strcpy(vie, strtok(0, "\n"));
-                btins(dict, eng, vie, MAX);
-            }
-        }
-    }
-    fclose(p);
-    free(eng);
-    free(vie);
-    free(key);
-    btcls(note);
-    btcls(dict);
 }
 
 void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
@@ -303,7 +266,7 @@ void delete_from_dict()
 
 void add_to_note()
 {
-    note = btopn("note.bt", 0, 0);
+    note = btopn("../src/note.bt", 0, 0);
     char gettext[MAX];
     char *value = (char *)malloc(sizeof(char) * MAX);
     int rsize;
@@ -339,7 +302,7 @@ void add_to_note()
 
 void delete_from_note()
 {
-    note = btopn("note.bt", 0, 0);
+    note = btopn("../src/note.bt", 0, 0);
     char gettext[MAX];
     char *value = (char *)malloc(sizeof(char) * MAX);
     int rsize;
@@ -387,7 +350,7 @@ void extend()
 
 void practice()
 {
-    note = btopn("note.bt", 0, 0);
+    note = btopn("../src/note.bt", 0, 0);
     int SIZE_OF_NOTE = 0;
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
