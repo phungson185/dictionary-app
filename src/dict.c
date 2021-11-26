@@ -1,4 +1,5 @@
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <stdio.h>
 #include <string.h>
 #include <jrb.h>
@@ -26,8 +27,9 @@ BTA *note;
 char htr[MAX];
 char buftrans[MAX];
 
-void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
 void set_mean_textview_text(GtkWidget *textview, char *text);
+void on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data);
+
 void translate();
 
 int main(int argc, char *argv[])
@@ -62,24 +64,34 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
+void on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
     gchar gettext[100];
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
+    int text_length = strlen(gettext);
     int rsize;
     int k = 0, count = 0;
-    btpos(dict, ZSTART);
-    gtk_list_store_clear(list);
+    char kd[2];
+    if (event->keyval != GDK_KEY_BackSpace)
+    {
+        gettext[text_length]=event->keyval;
+        gettext[text_length+1]='\0';
+    }
     if (strcmp(gettext, "") == 0)
     {
         set_mean_textview_text(textview1, "");
     }
     else
     {
+        kd[0]=gettext[0];
+        kd[1]='\0';
+        gtk_list_store_clear(list);
+        btsel(dict, kd, vie, sizeof(char*), &rsize);
         while (!btseln(dict, eng, vie, MAX, &rsize))
         {
+            if(eng[0] != gettext[0]) break;
             for (int i = 0; i < strlen(gettext); i++)
             {
                 if (eng[i] != gettext[i])
