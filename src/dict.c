@@ -24,8 +24,9 @@ GtkWidget *textview1, *textview2, *textview3, *textview4, *textview_his;
 
 BTA *dict;
 BTA *note;
-char htr[MAX];
+FILE *f;
 char buftrans[MAX];
+char his[MAX];
 
 void set_mean_textview_text(GtkWidget *textview, char *text);
 void on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data);
@@ -34,6 +35,8 @@ void translate();
 
 int main(int argc, char *argv[])
 {
+    get_history();
+
     gtk_init(&argc, &argv);
 
     builder = gtk_builder_new_from_file("../src/dict-app.glade");
@@ -45,6 +48,8 @@ int main(int argc, char *argv[])
 
     textview1 = GTK_WIDGET(gtk_builder_get_object(builder, "textview1"));
     textview_his = GTK_WIDGET(gtk_builder_get_object(builder, "textview_his"));
+
+    set_mean_textview_text(textview_his, his);
 
     comple = gtk_entry_completion_new();
     gtk_entry_completion_set_text_column(comple, 0);
@@ -60,8 +65,40 @@ int main(int argc, char *argv[])
     g_object_unref(builder);
     gtk_widget_show(window_main);
     gtk_main();
+    
 
     return 0;
+}
+
+void get_history(){
+    char buffer[MAX];
+    char line[MAX];
+    if ((f = fopen("../src/history.txt", "r")) == NULL)
+    {
+        printf("Lỗi không thể mở file.\n");
+        return -1;
+    }
+    while (fgets(line, MAX, f))
+    {
+        memset(buffer, 0, 4);
+        strcpy(buffer, line);
+        strcat(buffer,his);
+        strcpy(his,buffer);
+    }
+    strcat(his,"\n");
+    printf(his);
+    fclose(f);
+}
+void add_to_history(char * buf){
+    char line[MAX];
+    if ((f = fopen("../src/history.txt", "a")) == NULL)
+    {
+        printf("Lỗi không thể mở file.\n");
+        return -1;
+    }
+    strcat(buf,"\n");
+    fprintf(f,"%s",buf);
+    fclose(f);
 }
 
 void on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
@@ -151,14 +188,15 @@ void translate()
                 strcpy(buftrans, gettext);
                 strcpy(buffer, gettext);
                 strcat(buffer, "\n");
-                strcat(buffer, htr);
-                strcpy(htr, buffer);
+                strcat(buffer,his);
+                strcpy(his,buffer);
+                add_to_history(buftrans);
             }
             set_mean_textview_text(textview1, value);
         }
     }
 
-    set_mean_textview_text(textview_his, htr);
+    set_mean_textview_text(textview_his, his);
 
     free(value);
     free(buffer);
@@ -166,8 +204,9 @@ void translate()
 
 void clear_history()
 {
-    strcpy(htr, "");
-    set_mean_textview_text(textview_his, htr);
+    strcpy(his, "");
+    set_mean_textview_text(textview_his, his);
+    fclose(fopen("../src/history.txt", "w"));
 }
 
 void add_to_dict()
