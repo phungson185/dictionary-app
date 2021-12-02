@@ -1,3 +1,4 @@
 .vscode
 
-src/*.bt
+db/*bt
+db/history.txt

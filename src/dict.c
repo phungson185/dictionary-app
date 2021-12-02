@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     gtk_init(&argc, &argv);
 
-    builder = gtk_builder_new_from_file("../src/dict-app.glade");
+    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
     window_main = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
 
     gtk_builder_connect_signals(builder, NULL);
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     g_signal_connect(searchentry, "key_press_event", G_CALLBACK(on_key_press), NULL);
     g_signal_connect(window_main, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
-    dict = btopn("../src/dict.bt", 0, 0);
+    dict = btopn("../db/dict.bt", 0, 0);
 
     g_object_unref(builder);
     gtk_widget_show(window_main);
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 void get_history(){
     char buffer[MAX];
     char line[MAX];
-    if ((f = fopen("../src/history.txt", "r")) == NULL)
+    if ((f = fopen("../db/history.txt", "r")) == NULL)
     {
         printf("Lỗi không thể mở file.\n");
         return -1;
@@ -91,7 +91,7 @@ void get_history(){
 }
 void add_to_history(char * buf){
     char line[MAX];
-    if ((f = fopen("../src/history.txt", "a")) == NULL)
+    if ((f = fopen("../db/history.txt", "a")) == NULL)
     {
         printf("Lỗi không thể mở file.\n");
         return -1;
@@ -206,7 +206,7 @@ void clear_history()
 {
     strcpy(his, "");
     set_mean_textview_text(textview_his, his);
-    fclose(fopen("../src/history.txt", "w"));
+    fclose(fopen("../db/history.txt", "w"));
 }
 
 void add_to_dict()
@@ -317,7 +317,7 @@ void delete_from_dict()
 
 void add_to_note()
 {
-    note = btopn("../src/note.bt", 0, 0);
+    note = btopn("../db/note.bt", 0, 0);
     char gettext[MAX];
     char *value = (char *)malloc(sizeof(char) * MAX);
     int rsize;
@@ -353,7 +353,7 @@ void add_to_note()
 
 void delete_from_note()
 {
-    note = btopn("../src/note.bt", 0, 0);
+    note = btopn("../db/note.bt", 0, 0);
     char gettext[MAX];
     char *value = (char *)malloc(sizeof(char) * MAX);
     int rsize;
@@ -385,7 +385,7 @@ void extend()
 {
     GtkBuilder *builder;
 
-    builder = gtk_builder_new_from_file("../src/dict-app.glade");
+    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
 
     window_advanced = GTK_WIDGET(gtk_builder_get_object(builder, "window_advanced"));
     gtk_builder_connect_signals(builder, NULL);
@@ -401,7 +401,7 @@ void extend()
 
 void practice()
 {
-    note = btopn("../src/note.bt", 0, 0);
+    note = btopn("../db/note.bt", 0, 0);
     int SIZE_OF_NOTE = 0;
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
@@ -410,7 +410,7 @@ void practice()
 
     GtkBuilder *builder;
 
-    builder = gtk_builder_new_from_file("../src/dict-app.glade");
+    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
 
     window_note = GTK_WIDGET(gtk_builder_get_object(builder, "window_note"));
     gtk_builder_connect_signals(builder, NULL);
@@ -461,7 +461,7 @@ void about()
 {
     GtkBuilder *builder;
 
-    builder = gtk_builder_new_from_file("../src/dict-app.glade");
+    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
 
     window_about = GTK_WIDGET(gtk_builder_get_object(builder, "window_about"));
     gtk_builder_connect_signals(builder, NULL);

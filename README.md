@@ -1,4 +1,4 @@
-# DICTIONARY APP RUN ON LINUX
+# Linux dictionary app 
 
 ## Requirement
 - Install __Glade__ from __Ubuntu Software__
@@ -7,9 +7,9 @@
 
 ## Run
 ```
-cd b
+cd build
 cmake ..
 make
-./data
+./init
 ./dict
 ``` 

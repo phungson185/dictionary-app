@@ -13,9 +13,9 @@ int main()
     char *line = (char *)malloc(sizeof(char) * MAX);
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
-    dict = btcrt("../src/dict.bt", 0, 0);
-    note = btcrt("../src/note.bt", 0, 0);
-    if ((p = fopen("../src/dict.txt", "r")) == NULL)
+    dict = btcrt("../db/dict.bt", 0, 0);
+    note = btcrt("../db/note.bt", 0, 0);
+    if ((p = fopen("../db/dict.txt", "r")) == NULL)
     {
         printf("Lỗi không thể mở file.\n");
         return -1;
