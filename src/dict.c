@@ -36,9 +36,7 @@ void translate();
 int main(int argc, char *argv[])
 {
     get_history();
-
     gtk_init(&argc, &argv);
-
     builder = gtk_builder_new_from_file("../ui/dict-app.glade");
     window_main = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
 
@@ -65,40 +63,8 @@ int main(int argc, char *argv[])
     g_object_unref(builder);
     gtk_widget_show(window_main);
     gtk_main();
-    
 
     return 0;
-}
-
-void get_history(){
-    char buffer[MAX];
-    char line[MAX];
-    if ((f = fopen("../db/history.txt", "r")) == NULL)
-    {
-        printf("Lỗi không thể mở file.\n");
-        return -1;
-    }
-    while (fgets(line, MAX, f))
-    {
-        memset(buffer, 0, 4);
-        strcpy(buffer, line);
-        strcat(buffer,his);
-        strcpy(his,buffer);
-    }
-    strcat(his,"\n");
-    printf(his);
-    fclose(f);
-}
-void add_to_history(char * buf){
-    char line[MAX];
-    if ((f = fopen("../db/history.txt", "a")) == NULL)
-    {
-        printf("Lỗi không thể mở file.\n");
-        return -1;
-    }
-    strcat(buf,"\n");
-    fprintf(f,"%s",buf);
-    fclose(f);
 }
 
 void on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
@@ -165,10 +131,23 @@ void set_mean_textview_text(GtkWidget *textview, char *text)
     gtk_text_view_set_buffer(GTK_TEXT_VIEW(textview), buffer);
 }
 
+void Show_message(GtkWidget * parent , GtkMessageType type,  char * mms, char * content) 
+{
+    GtkWidget *mdialog;
+    mdialog = gtk_message_dialog_new(GTK_WINDOW(parent),
+                                     GTK_DIALOG_DESTROY_WITH_PARENT,
+                                     type,
+                                     GTK_BUTTONS_OK,
+                                     "%s", mms);
+    gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(mdialog), "%s",  content);
+    gtk_dialog_run(GTK_DIALOG(mdialog));
+    gtk_widget_destroy(mdialog);
+}
+
 void translate()
 {
     char *value = (char *)malloc(sizeof(char) * MAX);
-    char *buffer = (char *)malloc(sizeof(char) * MAX);
+    // char *buffer = (char *)malloc(sizeof(char) * MAX);
     btpos(dict, ZSTART);
     int rsize;
     gchar gettext[MAX];
@@ -183,23 +162,15 @@ void translate()
             set_mean_textview_text(textview1, "Không tìm thấy từ bạn cần tìm");
         else
         {
-            if (strcmp(buftrans, gettext) != 0)
-            {
-                strcpy(buftrans, gettext);
-                strcpy(buffer, gettext);
-                strcat(buffer, "\n");
-                strcat(buffer,his);
-                strcpy(his,buffer);
-                add_to_history(buftrans);
-            }
             set_mean_textview_text(textview1, value);
+            search_history_handler(gettext);
         }
     }
 
     set_mean_textview_text(textview_his, his);
 
     free(value);
-    free(buffer);
+    // free(buffer);
 }
 
 void clear_history()
@@ -207,6 +178,8 @@ void clear_history()
     strcpy(his, "");
     set_mean_textview_text(textview_his, his);
     fclose(fopen("../db/history.txt", "w"));
+    Show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS", "Xóa lịch sử  tra từ thành công.");
+
 }
 
 void add_to_dict()
@@ -468,4 +441,75 @@ void about()
 
     g_object_unref(builder);
     gtk_widget_show(window_about);
+}
+void get_history(){
+    char buffer[MAX];
+    char line[MAX];
+    if ((f = fopen("../db/history.txt", "r")) == NULL)
+    {
+        printf("Lỗi không thể mở file.\n");
+        return -1;
+    }
+    while (fgets(line, MAX, f))
+    {
+        memset(buffer, 0, 4);
+        strcpy(buffer, line);
+        strcat(buffer,his);
+        strcpy(his,buffer);
+    }
+    strcat(his,"\n");
+    printf(his);
+    fclose(f);
+}
+void add_to_history(char * buf){
+    char line[MAX];
+    if ((f = fopen("../db/history.txt", "a")) == NULL)
+    {
+        printf("Lỗi không thể mở file.\n");
+        return -1;
+    }
+    fprintf(f,"%s",buf);
+    fclose(f);
+}
+void delete_word_in_history(char * buf){
+    // char line[MAX];
+    // if ((f = fopen("../db/history.txt", "w")) == NULL)
+    // {
+    //     printf("Lỗi không thể mở file.\n");
+    //     return -1;
+    // }
+    // while (fgets(line, MAX, f))
+    // {
+    //     printf("line\n");
+    //     if(strcmp(buf, line)==0){
+    //         fprintf(f, "%s", "");
+    //     }
+    // }
+    // fclose(f);
+}
+void rewrite_history(char * his){
+    
+}
+void search_history_handler(char *gettext){
+    char *buffer = (char *)malloc(sizeof(char) * MAX);
+    sprintf(buftrans,"%s\n",gettext);
+    int i= strremove(his,buftrans);
+    strcpy(buffer, buftrans);
+    strcat(buffer,his);
+    strcpy(his,buffer);
+    free(buffer);
+    if(i==0) add_to_history(buftrans);
+    else rewrite_history(his);
+}
+int strremove(char *str, char *sub) {
+    size_t len = strlen(sub);
+    if (len > 0) {
+        char *p = str;
+        if ((p = strstr(p, sub)) != NULL) {
+            memmove(p, p + len, strlen(p + len) + 1);
+            return 1;
+        }
+    }
+    printf("p: %s\n", str);
+    return 0;
 }
