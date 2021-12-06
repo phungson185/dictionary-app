@@ -1,0 +1,4 @@
+/home/dung/dictionary-app/build/CMakeFiles/rebuild_cache.dir
+/home/dung/dictionary-app/build/CMakeFiles/edit_cache.dir
+/home/dung/dictionary-app/build/CMakeFiles/dict.dir
+/home/dung/dictionary-app/build/CMakeFiles/init.dir
