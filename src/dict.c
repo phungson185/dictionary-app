@@ -11,6 +11,9 @@
 
 #define MAX 1000
 
+GdkColor red;
+GdkColor green;
+
 GtkBuilder *builder;
 GtkWidget *window_main, *window_advanced, *window_note, *window_about;
 GtkEntryCompletion *comple;
@@ -29,13 +32,15 @@ char buftrans[MAX];
 char his[MAX];
 
 void set_mean_textview_text(GtkWidget *textview, char *text);
-void on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data);
+void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
 
 void translate();
 
 int main(int argc, char *argv[])
 {
     get_history();
+    gdk_color_parse("red", &red);
+    gdk_color_parse("green", &green);
     gtk_init(&argc, &argv);
     builder = gtk_builder_new_from_file("../ui/dict-app.glade");
     window_main = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
@@ -67,7 +72,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
+void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
@@ -79,8 +84,8 @@ void on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     char kd[2];
     if (event->keyval != GDK_KEY_BackSpace)
     {
-        gettext[text_length]=event->keyval;
-        gettext[text_length+1]='\0';
+        gettext[text_length] = event->keyval;
+        gettext[text_length + 1] = '\0';
     }
     if (strcmp(gettext, "") == 0)
     {
@@ -88,13 +93,14 @@ void on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
     }
     else
     {
-        kd[0]=gettext[0];
-        kd[1]='\0';
+        kd[0] = gettext[0];
+        kd[1] = '\0';
         gtk_list_store_clear(list);
-        btsel(dict, kd, vie, sizeof(char*), &rsize);
+        btsel(dict, kd, vie, sizeof(char *), &rsize);
         while (!btseln(dict, eng, vie, MAX, &rsize))
         {
-            if(eng[0] != gettext[0]) break;
+            if (eng[0] != gettext[0])
+                break;
             for (int i = 0; i < strlen(gettext); i++)
             {
                 if (eng[i] != gettext[i])
@@ -131,7 +137,7 @@ void set_mean_textview_text(GtkWidget *textview, char *text)
     gtk_text_view_set_buffer(GTK_TEXT_VIEW(textview), buffer);
 }
 
-void Show_message(GtkWidget * parent , GtkMessageType type,  char * mms, char * content) 
+void show_message(GtkWidget *parent, GtkMessageType type, char *mms, char *content)
 {
     GtkWidget *mdialog;
     mdialog = gtk_message_dialog_new(GTK_WINDOW(parent),
@@ -139,7 +145,11 @@ void Show_message(GtkWidget * parent , GtkMessageType type,  char * mms, char * 
                                      type,
                                      GTK_BUTTONS_OK,
                                      "%s", mms);
-    gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(mdialog), "%s",  content);
+    gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(mdialog), "%s", content);
+    if (type == GTK_MESSAGE_INFO)
+        gtk_widget_modify_fg(GTK_MESSAGE_DIALOG(mdialog), GTK_STATE_NORMAL, &green);
+    else
+        gtk_widget_modify_fg(GTK_MESSAGE_DIALOG(mdialog), GTK_STATE_NORMAL, &red);
     gtk_dialog_run(GTK_DIALOG(mdialog));
     gtk_widget_destroy(mdialog);
 }
@@ -154,12 +164,12 @@ void translate()
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
     if (strcmp(gettext, "") == 0)
     {
-        set_mean_textview_text(textview1, "");
+        show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Bạn chưa nhập từ tìm kiếm.");
     }
     else
     {
         if (btsel(dict, gettext, value, MAX, &rsize))
-            set_mean_textview_text(textview1, "Không tìm thấy từ bạn cần tìm");
+            show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Không tìm thấy từ bạn cần tìm");
         else
         {
             set_mean_textview_text(textview1, value);
@@ -170,7 +180,6 @@ void translate()
     set_mean_textview_text(textview_his, his);
 
     free(value);
-    // free(buffer);
 }
 
 void clear_history()
@@ -178,8 +187,7 @@ void clear_history()
     strcpy(his, "");
     set_mean_textview_text(textview_his, his);
     fclose(fopen("../db/history.txt", "w"));
-    Show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS", "Xóa lịch sử  tra từ thành công.");
-
+    show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS!", "Xóa lịch sử tra từ thành công.");
 }
 
 void add_to_dict()
@@ -191,33 +199,21 @@ void add_to_dict()
     btpos(dict, ZSTART);
     strcpy(new_word, gtk_entry_get_text(GTK_ENTRY(entry_newword)));
     strcpy(mean_word, gtk_entry_get_text(GTK_ENTRY(entry_meanword)));
-    if (strcmp(new_word, "") == 0 && strcmp(mean_word, "") == 0)
-    {
-        gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập từ mới và nghĩa cần thêm");
-    }
+    if (strcmp(new_word, "") == 0 || strcmp(mean_word, "") == 0)
+        show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Thông tin thêm từ còn thiếu.");
     else
     {
-        if (strcmp(new_word, "") == 0)
+
+        if (!btsel(dict, new_word, value, MAX, &rsize))
         {
-            gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập từ mới cần thêm");
-        }
-        else if (strcmp(mean_word, "") == 0)
-        {
-            gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập nghĩa của từ cần thêm");
+            show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Từ này đã có trong từ điển.");
         }
         else
         {
-            if (!btsel(dict, new_word, value, MAX, &rsize))
-            {
-                gtk_label_set_text(GTK_LABEL(textview2), "Từ này đã có trong từ điển");
-            }
+            if (!btins(dict, new_word, mean_word, MAX))
+                show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS!", "Đã thêm thành công.");
             else
-            {
-                if (!btins(dict, new_word, mean_word, MAX))
-                    gtk_label_set_text(GTK_LABEL(textview2), "Đã thêm thành công");
-                else
-                    gtk_label_set_text(GTK_LABEL(textview2), "Thêm thất bại, chương trình lỗi...");
-            }
+                show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Thêm từ thất bại, chương trình lỗi.");
         }
     }
     free(value);
@@ -232,32 +228,23 @@ void repair_word()
     btpos(dict, ZSTART);
     strcpy(new_word, gtk_entry_get_text(GTK_ENTRY(entry_newword)));
     strcpy(mean_word, gtk_entry_get_text(GTK_ENTRY(entry_meanword)));
-    if (strcmp(new_word, "") == 0 && strcmp(mean_word, "") == 0)
-    {
-        gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập từ và nghĩa cần sửa");
-    }
+    if (strcmp(new_word, "") == 0 || strcmp(mean_word, "") == 0)
+        show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Thông tin sửa từ còn thiếu.");
     else
     {
-        if (strcmp(new_word, "") == 0)
-        {
-            gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập từ cần sửa");
-        }
-        else if (strcmp(mean_word, "") == 0)
-        {
-            gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập nghĩa cần thay thế");
-        }
-        else if (!btsel(dict, new_word, value, MAX, &rsize))
+        if (!btsel(dict, new_word, value, MAX, &rsize))
             if (strcmp(value, mean_word) == 0)
-                gtk_label_set_text(GTK_LABEL(textview2), "Nghĩa bạn thay thế giống nghĩa của từ điển");
+                show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Nghĩa bạn thay thế giống nghĩa của từ điển.");
+
             else
             {
                 if (!btupd(dict, new_word, mean_word, MAX))
-                    gtk_label_set_text(GTK_LABEL(textview2), "Đã sửa thành công");
+                    show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS!", "Đã sửa thành công.");
                 else
-                    gtk_label_set_text(GTK_LABEL(textview2), "Sửa thất bại, chương trình lỗi...");
+                    show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Sửa thất bại, chương trình lỗi.");
             }
         else
-            gtk_label_set_text(GTK_LABEL(textview2), "Từ bạn cần sửa không có trong từ điển, vui lòng dùng chức năng thêm");
+            show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Từ bạn cần sửa không có trong từ điển, vui lòng dùng chức năng thêm");
     }
     free(value);
 }
@@ -270,19 +257,18 @@ void delete_from_dict()
     btpos(dict, ZSTART);
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(entry_del)));
     if (strcmp(gettext, "") == 0)
-    {
-        gtk_label_set_text(GTK_LABEL(textview2), "Bạn chưa nhập từ cần xóa");
-    }
+        show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Bạn chưa nhập từ cần xóa.");
     else
     {
         if (btsel(dict, gettext, value, MAX, &rsize))
-            gtk_label_set_text(GTK_LABEL(textview2), "Không tìm thấy từ bạn cần xóa");
+            show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Không tìm thấy từ bạn cần xóa.");
+
         else
         {
             if (!btdel(dict, gettext))
-                gtk_label_set_text(GTK_LABEL(textview2), "Đã xóa thành công");
+                show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS!", "Đã xóa thành công.");
             else
-                gtk_label_set_text(GTK_LABEL(textview2), "Xóa thất bại, chương trình lỗi...");
+                show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Xóa thất bại, chương trình lỗi.");
         }
     }
     free(value);
@@ -299,25 +285,19 @@ void add_to_note()
 
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
     if (strcmp(gettext, "") == 0)
-    {
-        set_mean_textview_text(textview1, "Bạn chưa nhập vào từ cần thêm vào danh sách ghi chú");
-    }
+        show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Bạn chưa nhập vào từ cần thêm vào danh sách ghi chú.");
     else
     {
         if (!btsel(note, gettext, value, MAX, &rsize))
-        {
-            set_mean_textview_text(textview1, "Từ này đã có trong danh sách ghi chú");
-        }
+            show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Từ này đã có trong danh sách ghi chú.");
         else if (btsel(dict, gettext, value, MAX, &rsize))
-            set_mean_textview_text(textview1, "Từ bạn nhập không có trong từ điển, không thể thêm...");
+            show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Từ bạn nhập không có trong từ điển, không thể thêm.");
         else
         {
             if (!btins(note, gettext, value, MAX))
-            {
-                set_mean_textview_text(textview1, "Đã thêm thành công");
-            }
+                show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS!", "Đã thêm thành công.");
             else
-                set_mean_textview_text(textview1, "Không thể thêm, chương trình lỗi...");
+                show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Không thể thêm, chương trình lỗi.");
         }
     }
     free(value);
@@ -333,21 +313,17 @@ void delete_from_note()
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(searchentry)));
 
     if (strcmp(gettext, "") == 0)
-    {
-        set_mean_textview_text(textview1, "Bạn chưa nhập vào từ cần xóa khỏi danh sách ghi chú");
-    }
+        show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Bạn chưa nhập vào từ cần xóa khỏi danh sách ghi chú");
     else
     {
         if (btsel(note, gettext, value, MAX, &rsize))
-            set_mean_textview_text(textview1, "Từ bạn nhập không có trong danh sách ghi chú");
+            show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Từ bạn nhập không có trong danh sách ghi chú");
         else
         {
             if (!btdel(note, gettext))
-            {
-                set_mean_textview_text(textview1, "Đã xóa thành công");
-            }
+                show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS!", "Đã xóa thành công.");
             else
-                set_mean_textview_text(textview1, "Không thể xóa, chương trình lỗi...");
+                show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Không thể xóa, chương trình lỗi.");
         }
     }
     free(value);
@@ -425,7 +401,7 @@ void practice()
 
 void delete_all_note()
 {
-    note = btcrt("note.bt", 0, 0);
+    note = btcrt("../db/note.bt", 0, 0);
     set_mean_textview_text(textview3, "Danh sách trống");
     btcls(note);
 }
@@ -442,7 +418,8 @@ void about()
     g_object_unref(builder);
     gtk_widget_show(window_about);
 }
-void get_history(){
+void get_history()
+{
     char buffer[MAX];
     char line[MAX];
     if ((f = fopen("../db/history.txt", "r")) == NULL)
@@ -454,24 +431,26 @@ void get_history(){
     {
         memset(buffer, 0, 4);
         strcpy(buffer, line);
-        strcat(buffer,his);
-        strcpy(his,buffer);
+        strcat(buffer, his);
+        strcpy(his, buffer);
     }
-    strcat(his,"\n");
+    strcat(his, "\n");
     printf(his);
     fclose(f);
 }
-void add_to_history(char * buf){
+void add_to_history(char *buf)
+{
     char line[MAX];
     if ((f = fopen("../db/history.txt", "a")) == NULL)
     {
         printf("Lỗi không thể mở file.\n");
         return -1;
     }
-    fprintf(f,"%s",buf);
+    fprintf(f, "%s", buf);
     fclose(f);
 }
-void delete_word_in_history(char * buf){
+void delete_word_in_history(char *buf)
+{
     // char line[MAX];
     // if ((f = fopen("../db/history.txt", "w")) == NULL)
     // {
@@ -487,25 +466,31 @@ void delete_word_in_history(char * buf){
     // }
     // fclose(f);
 }
-void rewrite_history(char * his){
-    
+void rewrite_history(char *his)
+{
 }
-void search_history_handler(char *gettext){
+void search_history_handler(char *gettext)
+{
     char *buffer = (char *)malloc(sizeof(char) * MAX);
-    sprintf(buftrans,"%s\n",gettext);
-    int i= strremove(his,buftrans);
+    sprintf(buftrans, "%s\n", gettext);
+    int i = strremove(his, buftrans);
     strcpy(buffer, buftrans);
-    strcat(buffer,his);
-    strcpy(his,buffer);
+    strcat(buffer, his);
+    strcpy(his, buffer);
     free(buffer);
-    if(i==0) add_to_history(buftrans);
-    else rewrite_history(his);
+    if (i == 0)
+        add_to_history(buftrans);
+    else
+        rewrite_history(his);
 }
-int strremove(char *str, char *sub) {
+int strremove(char *str, char *sub)
+{
     size_t len = strlen(sub);
-    if (len > 0) {
+    if (len > 0)
+    {
         char *p = str;
-        if ((p = strstr(p, sub)) != NULL) {
+        if ((p = strstr(p, sub)) != NULL)
+        {
             memmove(p, p + len, strlen(p + len) + 1);
             return 1;
         }
