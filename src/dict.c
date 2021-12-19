@@ -15,7 +15,8 @@ GdkColor red;
 GdkColor green;
 
 GtkBuilder *builder;
-GtkWidget *window_main, *window_advanced, *window_note, *window_about;
+GtkWidget *window_main, *window_advanced, *window_note, *window_about, *window_game;
+
 GtkEntryCompletion *comple;
 
 GtkListStore *list;
@@ -24,12 +25,14 @@ GtkTreeIter Iter;
 GtkEntry *searchentry, *entry_newword, *entry_meanword, *entry_del;
 
 GtkWidget *textview1, *textview2, *textview3, *textview4, *textview_his;
+GtkWidget *lbl_eng,*check_vie1, *check_vie2, *check_vie3, *check_vie4;
 
 BTA *dict;
 BTA *note;
 FILE *f;
 char buftrans[MAX];
 char his[MAX];
+int key_check;
 
 void set_mean_textview_text(GtkWidget *textview, char *text);
 void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
@@ -398,6 +401,170 @@ void practice()
     free(list);
     btcls(note);
 }
+
+void on_btn_game_clicked(){
+    GtkBuilder *builder;
+
+    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
+
+    window_game = GTK_WIDGET(gtk_builder_get_object(builder, "window_game"));
+
+    check_vie1= GTK_WIDGET(gtk_builder_get_object(builder,"check_vie1"));
+    check_vie2= GTK_WIDGET(gtk_builder_get_object(builder,"check_vie2"));
+    check_vie3= GTK_WIDGET(gtk_builder_get_object(builder,"check_vie3"));
+    check_vie4= GTK_WIDGET(gtk_builder_get_object(builder,"check_vie4"));
+    textview4= GTK_WIDGET(gtk_builder_get_object(builder,"textview4"));
+    lbl_eng= GTK_WIDGET(gtk_builder_get_object(builder,"lbl_eng"));
+
+    gtk_builder_connect_signals(builder, NULL);
+    gtk_widget_show(window_game);
+    new_question();
+}
+void out_game()
+{
+    gtk_widget_hide(window_game);
+}
+void new_question(){
+
+    int i=0;
+    // int rsize;
+
+    note = btopn("../db/note.bt", 0, 0);
+    btpos(note, ZSTART);
+    int SIZE_OF_NOTE = 0;
+    char *eng = (char *)malloc(sizeof(char) * MAX);
+    char *vie = (char *)malloc(sizeof(char) * MAX);
+    int rsize, flag = 0;
+    
+    JRB game_tree = make_jrb();
+    while(!btseln(note,eng,vie,MAX,&rsize))
+    {
+        i++;
+        jrb_insert_int(game_tree,i,(Jval){.s=strdup(eng)});
+    }
+
+    if (i==0)
+        {
+            btcls(note);
+            jrb_free_tree(game_tree);
+            set_mean_textview_text(textview4,"Danh sách từ khó trống, không thể chơi trò chơi" );
+            return -1;
+        }
+    else if (i>0 && i<4)
+    {
+        btcls(note);
+        jrb_free_tree(game_tree);
+        set_mean_textview_text(textview4,"Danh sách từ khó cần có 4 từ trở lên");
+        return -1;
+    }
+    else
+    {
+        set_mean_textview_text(textview4,"");
+    }
+    
+    time_t t;
+    int key_word_correct= 0;
+    int key_word2;
+    int key_word3;
+    char buffer1[MAX];
+    char buffer2[MAX];
+    char buffer3[MAX];
+    srand((unsigned) time(&t));
+    
+
+    key_word_correct = rand() % i + 1;
+    int key_word1 = key_word2 = key_word3 = key_word_correct;
+    gtk_label_set_text(GTK_LABEL(lbl_eng), jrb_find_int(game_tree,key_word_correct)->val.s);
+    btsel(note,jrb_find_int(game_tree,key_word_correct)->val.s,vie,MAX,&rsize);
+    key_check = rand() % 4 + 1;
+    while(key_word1 == key_word_correct)
+    {
+        key_word1 = rand() % i + 1;
+    }
+     while(key_word2 == key_word_correct||key_word2 == key_word1)
+    {
+        key_word2 = rand() % i + 1;
+    }
+     while(key_word3 == key_word_correct||key_word3 == key_word1||key_word3 == key_word2 )
+    {
+        key_word3 = rand() % i + 1;
+    }
+    btsel(note,jrb_find_int(game_tree,key_word1)->val.s,buffer1,MAX,&rsize);
+    btsel(note,jrb_find_int(game_tree,key_word2)->val.s,buffer2,MAX,&rsize);
+    btsel(note,jrb_find_int(game_tree,key_word3)->val.s,buffer3,MAX,&rsize);
+    if ( key_check == 1){
+   
+        gtk_button_set_label(check_vie1,vie);
+        gtk_button_set_label(check_vie2,buffer1);
+        gtk_button_set_label(check_vie3,buffer2);
+        gtk_button_set_label(check_vie4,buffer3);
+
+    }
+    else if ( key_check == 2)
+    {
+        gtk_button_set_label(check_vie2,vie);
+        gtk_button_set_label(check_vie1,buffer1);
+        gtk_button_set_label(check_vie3,buffer2);
+        gtk_button_set_label(check_vie4,buffer3);
+
+    }
+    else if ( key_check == 3)
+        {
+        gtk_button_set_label(check_vie3,vie);
+        gtk_button_set_label(check_vie2,buffer1);
+        gtk_button_set_label(check_vie1,buffer2);
+        gtk_button_set_label(check_vie4,buffer3);
+
+        }
+    else 
+       {
+        gtk_button_set_label(check_vie4,vie);
+        gtk_button_set_label(check_vie2,buffer1);
+        gtk_button_set_label(check_vie3,buffer2);
+        gtk_button_set_label(check_vie1,buffer3);
+
+       }
+    btcls(note);
+    jrb_free_tree(game_tree);
+}
+
+void on_check_vie1_clicked (GtkButton *button)
+{
+        if(key_check == 1)
+        {
+            set_mean_textview_text(textview4,"Chính xác");
+        }
+        else
+            set_mean_textview_text(textview4,"Không chính xác");
+}
+void on_check_vie2_clicked (GtkButton *button)
+{
+        if(key_check == 2)
+        {
+            set_mean_textview_text(textview4,"Chính xác");
+        }
+        else
+            set_mean_textview_text(textview4,"Không chính xác");
+}
+void on_check_vie3_clicked (GtkButton *button)
+{
+        if(key_check == 3)
+        {
+            set_mean_textview_text(textview4,"Chính xác");
+        }
+        else
+            set_mean_textview_text(textview4,"Không chính xác");
+}
+void on_check_vie4_clicked (GtkButton *button)
+{
+        if(key_check == 4)
+        {
+            set_mean_textview_text(textview4,"Chính xác");
+        }
+        else
+            set_mean_textview_text(textview4,"Không chính xác");
+}
+
 
 void delete_all_note()
 {
