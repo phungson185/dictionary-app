@@ -391,6 +391,7 @@ Phùng Đình Sơn		20184189
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="editable">False</property>
             <property name="justification">center</property>
           </object>
           <packing>
@@ -398,6 +399,27 @@ Phùng Đình Sơn		20184189
             <property name="fill">True</property>
             <property name="position">7</property>
           </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkWindow" id="window_game_history">
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Lich su test</property>
+    <property name="default-width">440</property>
+    <property name="default-height">250</property>
+    <property name="has-resize-grip">True</property>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="shadow-type">in</property>
+        <child>
+          <object class="GtkTextView" id="textview5">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="editable">False</property>
+          </object>
         </child>
       </object>
     </child>
@@ -609,6 +631,7 @@ Phùng Đình Sơn		20184189
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="pixels-above-lines">100</property>
+                <property name="editable">False</property>
                 <property name="justification">center</property>
                 <property name="monospace">True</property>
               </object>
@@ -750,6 +773,21 @@ Phùng Đình Sơn		20184189
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="pack-type">end</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_result_his">
+                <property name="label" translatable="yes">Lịch sử luyện tập</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="image-position">right</property>
+                <signal name="clicked" handler="show_game_his" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>

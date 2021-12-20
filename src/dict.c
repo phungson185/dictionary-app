@@ -15,7 +15,7 @@ GdkColor red;
 GdkColor green;
 
 GtkBuilder *builder;
-GtkWidget *window_main, *window_advanced, *window_note, *window_about, *window_game;
+GtkWidget *window_main, *window_advanced, *window_note, *window_about, *window_game, *window_game_history;
 
 GtkEntryCompletion *comple;
 
@@ -24,7 +24,7 @@ GtkTreeIter Iter;
 
 GtkEntry *searchentry, *entry_newword, *entry_meanword, *entry_del;
 
-GtkWidget *textview1, *textview2, *textview3, *textview4, *textview_his;
+GtkWidget *textview1, *textview2, *textview3, *textview4, *textview5, *textview_his;
 GtkWidget *lbl_eng,*check_vie1, *check_vie2, *check_vie3, *check_vie4;
 
 BTA *dict;
@@ -33,6 +33,13 @@ FILE *f;
 char buftrans[MAX];
 char his[MAX];
 int key_check;
+
+typedef struct game_result
+{
+    int total;
+    int correct_num;
+};
+struct game_result game_result;
 
 void set_mean_textview_text(GtkWidget *textview, char *text);
 void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
@@ -404,7 +411,7 @@ void practice()
 
 void on_btn_game_clicked(){
     GtkBuilder *builder;
-
+    
     builder = gtk_builder_new_from_file("../ui/dict-app.glade");
 
     window_game = GTK_WIDGET(gtk_builder_get_object(builder, "window_game"));
@@ -419,16 +426,39 @@ void on_btn_game_clicked(){
     gtk_builder_connect_signals(builder, NULL);
     gtk_widget_show(window_game);
     new_question();
+    new_record_result_of_game();
+}
+void new_record_result_of_game(){
+    game_result.total=0;
+    game_result.correct_num=0;
 }
 void out_game()
 {
     gtk_widget_hide(window_game);
+    save_record_result_of_game();
+}
+void save_record_result_of_game(){
+    char line[MAX];
+    char *buf = (char *)malloc(sizeof(char) * MAX);
+
+    if ((f = fopen("../db/game_history.txt", "a")) == NULL)
+    {
+        printf("Lỗi không thể mở file.\n");
+        return -1;
+    }
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    sprintf(buf,"%s\n%s%d\n%s%d\n%s", asctime(tm), "Total: ", game_result.total, "Correct: ", game_result.correct_num
+    ,"-------------------------------");
+    
+    fprintf(f, "%s\n", buf);
+    fclose(f);
 }
 void new_question(){
 
     int i=0;
-    // int rsize;
 
+    is_answed(FALSE);
     note = btopn("../db/note.bt", 0, 0);
     btpos(note, ZSTART);
     int SIZE_OF_NOTE = 0;
@@ -526,6 +556,15 @@ void new_question(){
        }
     btcls(note);
     jrb_free_tree(game_tree);
+    game_result.total++;
+
+    
+}
+void is_answed(int bool ){
+    gtk_widget_set_sensitive(check_vie1, !bool);
+    gtk_widget_set_sensitive(check_vie2, !bool);
+    gtk_widget_set_sensitive(check_vie3, !bool);
+    gtk_widget_set_sensitive(check_vie4, !bool);
 }
 
 void on_check_vie1_clicked (GtkButton *button)
@@ -533,36 +572,76 @@ void on_check_vie1_clicked (GtkButton *button)
         if(key_check == 1)
         {
             set_mean_textview_text(textview4,"Chính xác");
+            game_result.correct_num++;
         }
         else
             set_mean_textview_text(textview4,"Không chính xác");
+        
+        is_answed(TRUE);  
 }
 void on_check_vie2_clicked (GtkButton *button)
 {
         if(key_check == 2)
         {
             set_mean_textview_text(textview4,"Chính xác");
+            game_result.correct_num++;
         }
         else
             set_mean_textview_text(textview4,"Không chính xác");
+
+        is_answed(TRUE);  
 }
 void on_check_vie3_clicked (GtkButton *button)
 {
         if(key_check == 3)
         {
             set_mean_textview_text(textview4,"Chính xác");
+            game_result.correct_num++;
         }
         else
             set_mean_textview_text(textview4,"Không chính xác");
+
+        is_answed(TRUE);  
 }
 void on_check_vie4_clicked (GtkButton *button)
 {
         if(key_check == 4)
         {
             set_mean_textview_text(textview4,"Chính xác");
+            game_result.correct_num++;
         }
         else
             set_mean_textview_text(textview4,"Không chính xác");
+
+        is_answed(TRUE);  
+}
+void show_game_his(GtkButton *button){
+    GtkBuilder *builder;
+    
+    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
+
+    gtk_builder_connect_signals(builder, NULL);
+
+    window_game_history = GTK_WIDGET(gtk_builder_get_object(builder, "window_game_history"));
+
+    textview5 = GTK_WIDGET(gtk_builder_get_object(builder,"textview5"));
+
+    char buffer[MAX];
+    char line[MAX];
+    if ((f = fopen("../db/game_history.txt", "r")) == NULL)
+    {
+        printf("Lỗi không thể mở file.\n");
+        return -1;
+    }
+    while (fgets(line, MAX, f))
+    {
+        strcat(buffer, line);
+    }
+    fclose(f);
+
+    set_mean_textview_text(textview5, buffer);
+    g_object_unref(builder);
+    gtk_widget_show(window_game_history);
 }
 
 
