@@ -9,7 +9,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#define MAX 1000
+#define MAX 10000
 
 GdkColor red;
 GdkColor green;
@@ -35,6 +35,11 @@ char his[MAX];
 int key_check;
 int SIZE_OF_NOTE;
 
+char dict_path[] = "../db/AnhViet.dat";
+char note_path[] = "../db/note.bt";
+char ui_path[] = "../ui/dict-app.glade";
+char history_path[] = "../db/history.txt";
+
 typedef struct game_result
 {
     int total;
@@ -53,7 +58,7 @@ int main(int argc, char *argv[])
     gdk_color_parse("red", &red);
     gdk_color_parse("green", &green);
     gtk_init(&argc, &argv);
-    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
+    builder = gtk_builder_new_from_file(ui_path);
     window_main = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
 
     gtk_builder_connect_signals(builder, NULL);
@@ -74,7 +79,7 @@ int main(int argc, char *argv[])
     g_signal_connect(searchentry, "key_press_event", G_CALLBACK(on_key_press), NULL);
     g_signal_connect(window_main, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
-    dict = btopn("../db/dict.bt", 0, 0);
+    dict = btopn(dict_path, 0, 0);
 
     g_object_unref(builder);
     gtk_widget_show(window_main);
@@ -197,7 +202,7 @@ void clear_history()
 {
     strcpy(his, "");
     set_mean_textview_text(textview_his, his);
-    fclose(fopen("../db/history.txt", "w"));
+    fclose(fopen(history_path, "w"));
     show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS!", "Xóa lịch sử tra từ thành công.");
 }
 
@@ -287,7 +292,7 @@ void delete_from_dict()
 
 void add_to_note()
 {
-    note = btopn("../db/note.bt", 0, 0);
+    note = btopn(note_path, 0, 0);
     char gettext[MAX];
     char *value = (char *)malloc(sizeof(char) * MAX);
     int rsize;
@@ -317,7 +322,7 @@ void add_to_note()
 
 void delete_from_note()
 {
-    note = btopn("../db/note.bt", 0, 0);
+    note = btopn(note_path, 0, 0);
     char gettext[MAX];
     char *value = (char *)malloc(sizeof(char) * MAX);
     int rsize;
@@ -643,7 +648,7 @@ void show_game_his(GtkButton *button)
 {
     GtkBuilder *builder;
 
-    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
+    builder = gtk_builder_new_from_file(ui_path);
 
     gtk_builder_connect_signals(builder, NULL);
 
@@ -671,7 +676,7 @@ void show_game_his(GtkButton *button)
 
 void delete_all_note()
 {
-    note = btcrt("../db/note.bt", 0, 0);
+    note = btcrt(note_path, 0, 0);
     set_mean_textview_text(textview3, "Danh sách trống");
     btcls(note);
 }
@@ -680,7 +685,7 @@ void about()
 {
     GtkBuilder *builder;
 
-    builder = gtk_builder_new_from_file("../ui/dict-app.glade");
+    builder = gtk_builder_new_from_file(ui_path);
 
     window_about = GTK_WIDGET(gtk_builder_get_object(builder, "window_about"));
     gtk_builder_connect_signals(builder, NULL);
@@ -692,7 +697,7 @@ void get_history()
 {
     char buffer[MAX];
     char line[MAX];
-    if ((f = fopen("../db/history.txt", "r")) == NULL)
+    if ((f = fopen(history_path, "r")) == NULL)
     {
         printf("Lỗi không thể mở file.\n");
         return -1;
@@ -711,7 +716,7 @@ void get_history()
 void add_to_history(char *buf)
 {
     char line[MAX];
-    if ((f = fopen("../db/history.txt", "a")) == NULL)
+    if ((f = fopen(history_path, "a")) == NULL)
     {
         printf("Lỗi không thể mở file.\n");
         return -1;
@@ -765,6 +770,5 @@ int strremove(char *str, char *sub)
             return 1;
         }
     }
-    printf("p: %s\n", str);
     return 0;
 }
