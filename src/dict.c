@@ -26,8 +26,8 @@ GtkEntry *searchentry, *entry_newword, *entry_meanword, *entry_del;
 
 GtkWidget *textview1, *textview2, *textview3, *textview4, *textview5, *textview_his;
 GtkWidget *lbl_eng, *check_vie1, *check_vie2, *check_vie3, *check_vie4;
-GtkWidget *lv_y_hoc, *lv_toan_tin, *lv_dtvt, *lv_xay_dung, *lv_dien_lanh, *lv_hh_vat_lieu, *lv_dien, *lv_ckct, *cn_kinh_te, *cn_ky_thuat, *tu_ghi_chu;
-GtkWidget *question, *ans_1, *ans_2, *ans_3, *ans_4;
+GtkWidget *lv_y_hoc, *lv_toan_tin, *lv_dtvt, *lv_xay_dung, *lv_dien_lanh, *lv_hh_vat_lieu, *lv_dien, *lv_ckct, *cn_kinh_te, *cn_ky_thuat, *tu_ghi_chu, *question_num;
+GtkWidget *question, *ans_1, *ans_2, *ans_3, *ans_4, *total_num, *correct_num;
 
 BTA *dict;
 BTA *note;
@@ -44,6 +44,7 @@ char history_path[] = "../db/history.txt";
 int y_hoc,toan_tin, dtvt, xay_dung, dien_lanh, hh_vat_lieu, dien, ckct;
 int kinh_te, ky_thuat;
 int filter_ghi_chu;
+int num_of_ques=30;
 
 JRB *game_tree;
 int game_tree_size;
@@ -454,7 +455,7 @@ void on_btn_game_clicked()
     cn_kinh_te=   GTK_WIDGET(gtk_builder_get_object(builder, "cn_kinh_te"));
     cn_ky_thuat=   GTK_WIDGET(gtk_builder_get_object(builder, "cn_ky_thuat"));
     tu_ghi_chu=   GTK_WIDGET(gtk_builder_get_object(builder, "tu_ghi_chu"));
-
+    question_num=   GTK_WIDGET(gtk_builder_get_object(builder, "question_num"));
 
     gtk_builder_connect_signals(builder, NULL);
     gtk_widget_show(window_question_filter);
@@ -485,6 +486,36 @@ void print_question_tree(JRB question_tree) {
   }
   
 }
+char * get_mean(char* vie, char* lv)
+{
+    char *start, *end;
+    char *target=NULL;
+    // printf("lv: %s", lv);
+    // return vie;
+    start=strstr(vie,lv);
+    if(start!=NULL){
+
+        start += strlen(lv);
+        if (end = strstr( start, "@" ))
+            {
+            target = ( char * )malloc( end - start + 1 );
+            memcpy( target, start, end - start );
+            target[end - start] = '\0';
+            printf("target: %s\n", target);
+            return target;
+        // i++;
+        // jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,target)});
+            }
+            else if( end = strstr( start, "\0" )) {
+                printf("start: %s\n", start);
+            return start;
+            // i++;
+            // jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,start)});
+            }
+    }
+    strcpy(start, "empty");
+    return start;
+}
 void new_game(){
     int i=0;
     get_filter();
@@ -498,18 +529,66 @@ void new_game(){
 
     game_tree = make_jrb();
 
-    char *p;
+    char *start, *end;
+    char *target=NULL;
+    char *lv= (char *)malloc(sizeof(char) * MAX);
     btpos(dict,ZSTART);
+    // toan_tin, dtvt, xay_dung, dien_lanh, hh_vat_lieu, dien, ckct
+    if(y_hoc){
+        strcpy(lv, "@Lĩnh vực: y học\n");
+    }
+    if(toan_tin){
+        strcpy(lv, "@Lĩnh vực: toán & tin\n");
+    }
+    if(dtvt){
+        strcpy(lv, "@Lĩnh vực: điện tử & viễn thông\n");
+    }
+    if(xay_dung){
+        strcpy(lv, "@Lĩnh vực: xây dựng\n");
+    }
+    if(dien_lanh){
+        strcpy(lv, "@Lĩnh vực: điện lạnh\n");
+    }
+    if(hh_vat_lieu){
+        strcpy(lv, "@Lĩnh vực: hóa học & vật liệu\n");
+    }
+    if(dien){
+        strcpy(lv, "@Lĩnh vực: điện\n");
+    }
+    if(ckct){
+        strcpy(lv, "@Lĩnh vực: cơ khí & công trình\n");
+    }
+    if(ky_thuat){
+        strcpy(lv,"@Chuyên ngành kỹ thuật\n");
+    }
+    if(kinh_te){
+        strcpy(lv,"@Chuyên ngành kinh tế\n");
+    }
+    printf("%s",lv);
     while (!btseln(dict, eng, vie, MAX, &rsize))
     {
-        // if(y_hoc)
-        p=strstr(vie,"@Lĩnh vực: thực phẩm");
-        if(p!=NULL){
-
-            i++;
-            jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,p)});
+        //tach lay nghia
+        if(i>num_of_ques) break;
+        start=strstr(vie,lv);
+        if(start!=NULL){
+            start += strlen(lv);
+            if ( end = strstr( start, "@" ))
+             { target = ( char * )malloc( end - start + 1 );
+            memcpy( target, start, end - start );
+            target[end - start] = '\0';
+            if(strlen(target)>0){
+                i++;
+                jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,target)});
             }
-    }  
+             }
+             else if( end = strstr( start, "\0" )) {
+                if(strlen(start)>0){
+                    i++;
+                    jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,start)});
+                }
+             }
+        }
+    } 
     printf("i= %d\n", i);
 
     game_tree_size=i;
@@ -517,10 +596,12 @@ void new_game(){
     {
         jrb_free_tree(game_tree);
         show_message(window_question_filter,GTK_MESSAGE_ERROR, "ERROR", "Danh sách từ trống, không thể chơi trò chơi" );
+        return;
     }
     else if (i > 0 && i < 4){
         jrb_free_tree(game_tree);
         show_message(window_question_filter,GTK_MESSAGE_ERROR, "ERROR", "Danh sách từ cần có 4 từ trở lên" );
+        return;
     }
     btcls(note);
 
@@ -535,12 +616,15 @@ void new_game(){
     ans_3 = GTK_WIDGET(gtk_builder_get_object(builder, "ans_3"));
     ans_4 = GTK_WIDGET(gtk_builder_get_object(builder, "ans_4"));
     question = GTK_WIDGET(gtk_builder_get_object(builder, "question"));
+    total_num = GTK_WIDGET(gtk_builder_get_object(builder, "total_num"));
+    correct_num = GTK_WIDGET(gtk_builder_get_object(builder, "correct_num"));
+    
 
     gtk_builder_connect_signals(builder, NULL);
     gtk_widget_show(window_game);
-    new_question();
     new_record_result_of_game();
-
+    new_question();
+    
 
 }
 void new_question(){
@@ -554,6 +638,8 @@ void new_question(){
     char buffer2[MAX];
     char buffer3[MAX];
     srand((unsigned)time(&t));
+    
+    is_answed(FALSE);
 
     key_word_correct = rand() % i + 1;
     int key_word1 = key_word2 = key_word3 = key_word_correct;
@@ -574,16 +660,17 @@ void new_question(){
     word* w= jrb_find_int(game_tree, key_word_correct)->val.v;
     word* w1= jrb_find_int(game_tree, key_word1)->val.v;
     strcpy(buffer1,w1->vie) ;
-    strcat(buffer1, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    strcat(buffer1, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     word* w2= jrb_find_int(game_tree, key_word2)->val.v;
     strcpy(buffer2,w2->vie) ;
     word* w3= jrb_find_int(game_tree, key_word3)->val.v;
     strcpy(buffer3,w3->vie) ;
-    // printf("buffer1: %s\n", buffer1);
-    // printf("buffer2: %s\n", buffer2);
-    // printf("buffer3: %s\n", buffer3);
-
+ 
+    char* str= (char *)malloc(sizeof(char) * MAX);
+    sprintf(str,"%d/%d", game_result.total, num_of_ques);
+    gtk_label_set_text(total_num, str);
+    sprintf(str,"%d", game_result.correct_num);
+    gtk_label_set_text(correct_num, str);
+    
     gtk_label_set_text(question, w->eng );
     if (key_check == 1)
     {
@@ -749,17 +836,48 @@ void new_question_fix()
 }
 void is_answed(int bool)
 {
-    gtk_widget_set_sensitive(check_vie1, !bool);
-    gtk_widget_set_sensitive(check_vie2, !bool);
-    gtk_widget_set_sensitive(check_vie3, !bool);
-    gtk_widget_set_sensitive(check_vie4, !bool);
+    show_correct(bool);
+    gtk_widget_set_sensitive(ans_1, !bool);
+    gtk_widget_set_sensitive(ans_2, !bool);
+    gtk_widget_set_sensitive(ans_3, !bool);
+    gtk_widget_set_sensitive(ans_4, !bool);
 }
+void show_correct(int bool){
+        GdkColor color;
 
+        if(bool) gdk_color_parse("red", &color);
+        else return hide_correct();
+
+        if(key_check==1){
+      gtk_widget_modify_fg( GTK_WIDGET(ans_1), GTK_STATE_NORMAL, &color );
+        }
+        else if (key_check==2)
+        {
+      gtk_widget_modify_fg( GTK_WIDGET(ans_2), GTK_STATE_NORMAL, &color );
+            
+        }
+         else if (key_check==3)
+        {
+      gtk_widget_modify_fg( GTK_WIDGET(ans_3), GTK_STATE_NORMAL, &color );
+            
+        }
+         else if (key_check==4)
+        {
+      gtk_widget_modify_fg( GTK_WIDGET(ans_4), GTK_STATE_NORMAL, &color );
+            
+        }
+        
+}
+void hide_correct(){
+    gtk_widget_modify_fg( GTK_WIDGET(ans_1), GTK_STATE_NORMAL, NULL );
+    gtk_widget_modify_fg( GTK_WIDGET(ans_2), GTK_STATE_NORMAL, NULL );
+    gtk_widget_modify_fg( GTK_WIDGET(ans_3), GTK_STATE_NORMAL, NULL );
+    gtk_widget_modify_fg( GTK_WIDGET(ans_4), GTK_STATE_NORMAL, NULL );
+}
 void on_check_vie1_clicked(GtkButton *button)
 {
     if (key_check == 1)
     {
-        set_mean_textview_text(textview4, "Chính xác");
         game_result.correct_num++;
     }
     else

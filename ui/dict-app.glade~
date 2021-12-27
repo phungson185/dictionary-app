@@ -266,7 +266,7 @@ Phùng Đình Sơn		20184189
           </packing>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="total_num">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">1/30</property>
@@ -280,12 +280,13 @@ Phùng Đình Sơn		20184189
           </packing>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="on_check_vie1_clicked">
             <property name="width-request">329</property>
             <property name="height-request">117</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_check_vie1_clicked" swapped="no"/>
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
@@ -295,6 +296,7 @@ Phùng Đình Sơn		20184189
                   <object class="GtkTextView" id="ans_1">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="wrap-mode">word</property>
                   </object>
                 </child>
               </object>
@@ -312,6 +314,7 @@ Phùng Đình Sơn		20184189
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_check_vie3_clicked" swapped="no"/>
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
@@ -321,6 +324,7 @@ Phùng Đình Sơn		20184189
                   <object class="GtkTextView" id="ans_3">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="wrap-mode">word</property>
                   </object>
                 </child>
               </object>
@@ -332,12 +336,13 @@ Phùng Đình Sơn		20184189
           </packing>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="on_check_vie2_clicked">
             <property name="width-request">329</property>
             <property name="height-request">120</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_check_vie2_clicked" swapped="no"/>
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
@@ -347,6 +352,7 @@ Phùng Đình Sơn		20184189
                   <object class="GtkTextView" id="ans_2">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="wrap-mode">word</property>
                   </object>
                 </child>
               </object>
@@ -364,6 +370,7 @@ Phùng Đình Sơn		20184189
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <signal name="clicked" handler="on_check_vie4_clicked" swapped="no"/>
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
@@ -373,6 +380,7 @@ Phùng Đình Sơn		20184189
                   <object class="GtkTextView" id="ans_4">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="wrap-mode">word</property>
                   </object>
                 </child>
               </object>
@@ -412,7 +420,7 @@ Phùng Đình Sơn		20184189
           </packing>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="correct_num">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">7</property>
@@ -711,8 +719,8 @@ Phùng Đình Sơn		20184189
             <property name="receives-default">True</property>
             <property name="always-show-image">True</property>
             <signal name="clicked" handler="translate" swapped="no"/>
-            <accelerator key="Return" signal="activate"/>
             <accelerator key="Return" signal="clicked"/>
+            <accelerator key="Return" signal="activate"/>
           </object>
           <packing>
             <property name="x">654</property>
@@ -965,6 +973,7 @@ Phùng Đình Sơn		20184189
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <signal name="clicked" handler="practice" swapped="no"/>
           </object>
           <packing>
             <property name="x">15</property>
