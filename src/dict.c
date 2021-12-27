@@ -61,6 +61,11 @@ void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
 
 void translate();
 
+void on_check_vie1_clicked(GtkButton *button);
+void on_check_vie2_clicked(GtkButton *button);
+void on_check_vie3_clicked(GtkButton *button);
+void on_check_vie4_clicked(GtkButton *button);
+
 int main(int argc, char *argv[])
 {
     get_history();
@@ -619,6 +624,10 @@ void new_game(){
     total_num = GTK_WIDGET(gtk_builder_get_object(builder, "total_num"));
     correct_num = GTK_WIDGET(gtk_builder_get_object(builder, "correct_num"));
     
+    g_signal_connect(ans_1, "button-press-event", G_CALLBACK(on_check_vie1_clicked), NULL);
+    g_signal_connect(ans_2, "button-press-event", G_CALLBACK(on_check_vie2_clicked), NULL);
+    g_signal_connect(ans_3, "button-press-event", G_CALLBACK(on_check_vie3_clicked), NULL);
+    g_signal_connect(ans_4, "button-press-event", G_CALLBACK(on_check_vie4_clicked), NULL);
 
     gtk_builder_connect_signals(builder, NULL);
     gtk_widget_show(window_game);
@@ -664,6 +673,16 @@ void new_question(){
     strcpy(buffer2,w2->vie) ;
     word* w3= jrb_find_int(game_tree, key_word3)->val.v;
     strcpy(buffer3,w3->vie) ;
+    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
+        strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
+    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
+    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
+    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
+    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
+    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
+    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
+    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
+
  
     char* str= (char *)malloc(sizeof(char) * MAX);
     sprintf(str,"%d/%d", game_result.total, num_of_ques);
