@@ -673,16 +673,6 @@ void new_question(){
     strcpy(buffer2,w2->vie) ;
     word* w3= jrb_find_int(game_tree, key_word3)->val.v;
     strcpy(buffer3,w3->vie) ;
-    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
-        strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
-    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
-    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
-    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
-    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
-    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
-    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
-    strcat(buffer3,"anh yeu dung.........dung eu dung.........dung ");
-
  
     char* str= (char *)malloc(sizeof(char) * MAX);
     sprintf(str,"%d/%d", game_result.total, num_of_ques);
