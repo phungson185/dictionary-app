@@ -1307,7 +1307,7 @@ Phùng Đình Sơn		20184189
             <property name="can-focus">True</property>
             <property name="progress-pulse-step">0</property>
             <property name="primary-icon-name">input-keyboard</property>
-            <property name="input-purpose">number</property>
+            <property name="input-purpose">url</property>
           </object>
           <packing>
             <property name="x">318</property>

@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../cmake-btree/inc/bc.h
+limits.h
+-
+
+../cmake-btree/inc/bt.h
+stdio.h
+-
+bc.h
+../cmake-btree/inc/bc.h
+
+../cmake-btree/inc/btree.h
+bt.h
+../cmake-btree/inc/bt.h
+
+/home/dung/git/dictionary-app/src/init.c
+stdio.h
+-
+string.h
+-
+stdlib.h
+-
+btree.h
+-
+
