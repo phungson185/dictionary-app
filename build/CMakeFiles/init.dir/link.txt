@@ -1,1 +1,0 @@
-/usr/bin/cc -g  -rdynamic CMakeFiles/init.dir/src/init.c.o  -o init   -L/home/dung/git/dictionary-app/lib/blib  -L/home/dung/git/dictionary-app/cmake-btree  -Wl,-rpath,/home/dung/git/dictionary-app/lib/blib:/home/dung/git/dictionary-app/cmake-btree -lbt 
