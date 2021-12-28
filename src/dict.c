@@ -35,6 +35,7 @@ FILE *f;
 char buftrans[MAX];
 char his[MAX];
 int key_check;
+int lv_num;
 
 char dict_path[] = "../db/AnhViet.dat";
 char note_path[] = "../db/note.bt";
@@ -536,66 +537,70 @@ void insert_game_tree(BTA *source, char filter[][50])
     char *target = NULL;
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
-    int rsize, flag = 0;
+    char *lv = (char *)malloc(sizeof(char) * MAX);
+    char *mean = (char *)malloc(sizeof(char) * MAX);
+
+    int rsize, check_lv = 0;
 
     btpos(source, ZSTART);
-    for (int j = 0; j <10; j++)
-        if (filter[j][0] != '\0')
-            printf("%s\n", filter[j]);
 
-    // if (strcmp(lv, "empty") == 0)
-    // {
-    //     while (!btseln(source, eng, vie, MAX, &rsize))
-    //     {
-    //         if (i > num_of_ques)
-    //             break;
-    //         i++;
-    //         jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng, vie)});
-    //     }
-    //     game_tree_size = i;
-    // }
-    // else
-    // {
-    //     while (!btseln(source, eng, vie, MAX, &rsize))
-    //     {
-    //         //tach lay nghia
-    //         if (i > num_of_ques)
-    //             break;
-    //         if (lv != NULL)
-    //         {
-    //             start = strstr(vie, lv);
-    //             if (start != NULL)
-    //             {
-    //                 start += strlen(lv);
-    //                 if (end = strstr(start, "@"))
-    //                 {
-    //                     target = (char *)malloc(end - start + 1);
-    //                     memcpy(target, start, end - start);
-    //                     target[end - start] = '\0';
-    //                     if (strlen(target) > 0)
-    //                     {
-    //                         i++;
-    //                         jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng, target)});
-    //                     }
-    //                 }
-    //                 else if (end = strstr(start, "\0"))
-    //                 {
-    //                     if (strlen(start) > 0)
-    //                     {
-    //                         i++;
-    //                         jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng, start)});
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         else
-    //         {
-    //             i++;
-    //             jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng, start)});
-    //         }
-    //     }
-    //     game_tree_size = i;
-    // }
+    while (!btseln(source, eng, vie, MAX, &rsize))
+    {
+        //tach lay nghia
+        if (i > num_of_ques)
+            break;
+        strcpy(mean, "");
+        check_lv = 0;
+
+        for (int j = 0; j < 10; j++)
+        {
+            if (filter[j][0] != '\0')
+            {
+            
+                start = end = target = NULL;
+
+                strcpy(lv, filter[j]);
+                start = strstr(vie, lv);
+                if (start != NULL)
+                {
+
+                    check_lv++;
+                    start += strlen(lv);
+                    if (end = strstr(start, "@"))
+                    {
+                        target = (char *)malloc(end - start + 1);
+                        memcpy(target, start, end - start);
+                        target[end - start] = '\0';
+                        if (strlen(target) > 0)
+                        {
+                            i++;
+                            strcat(mean, lv);
+                            strcat(mean, target);
+                        }
+                    }
+                    else if (end = strstr(start, "\0"))
+                    {
+                        if (strlen(start) > 0)
+                        {
+                            i++;
+                            strcat(mean, lv);
+                            strcat(mean, start);
+                        }
+                    }
+                }
+                else
+                    break;
+            }
+        }
+        if (strlen(mean) > 0 && check_lv == lv_num)
+        {
+            // printf("eng: %s, mean: %s\n ",eng, mean);
+            jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng, mean)});
+        }
+    }
+    game_tree_size = i;
+    printf("game size: %d\n", i);
+
     btcls(note);
 }
 void new_game()
@@ -605,28 +610,61 @@ void new_game()
     note = btopn(note_path, 0, 0);
     int SIZE_OF_NOTE = 0;
     game_tree = make_jrb();
+
     char filter[10][50];
+    lv_num = 0;
     memset(filter, '\0', sizeof(filter));
+
     if (y_hoc)
+    {
         strcpy(filter[0], "@Lĩnh vực: y học\n");
+        lv_num++;
+    }
     if (toan_tin)
+    {
         strcpy(filter[1], "@Lĩnh vực: toán & tin\n");
+        lv_num++;
+    }
     if (dtvt)
+    {
         strcpy(filter[2], "@Lĩnh vực: điện tử & viễn thông\n");
+        lv_num++;
+    }
     if (xay_dung)
+    {
         strcpy(filter[3], "@Lĩnh vực: xây dựng\n");
+        lv_num++;
+    }
     if (dien_lanh)
+    {
         strcpy(filter[4], "@Lĩnh vực: điện lạnh\n");
+        lv_num++;
+    }
     if (hh_vat_lieu)
+    {
         strcpy(filter[5], "@Lĩnh vực: hóa học & vật liệu\n");
+        lv_num++;
+    }
     if (dien)
+    {
         strcpy(filter[6], "@Lĩnh vực: điện\n");
+        lv_num++;
+    }
     if (ckct)
+    {
         strcpy(filter[7], "@Lĩnh vực: cơ khí & công trình\n");
+        lv_num++;
+    }
     if (ky_thuat)
+    {
         strcpy(filter[8], "@Chuyên ngành kỹ thuật\n");
+        lv_num++;
+    }
     if (kinh_te)
+    {
         strcpy(filter[9], "@Chuyên ngành kinh tế\n");
+        lv_num++;
+    }
     if (filter_ghi_chu)
         insert_game_tree(note, filter);
     else
