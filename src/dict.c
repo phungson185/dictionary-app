@@ -15,7 +15,7 @@ GdkColor red;
 GdkColor green;
 
 GtkBuilder *builder;
-GtkWidget *window_main, *window_advanced, *window_note, *window_about,*window_question_filter, *window_game, *window_game_history;
+GtkWidget *window_main, *window_advanced, *window_note, *window_about, *window_question_filter, *window_game, *window_game_history;
 
 GtkEntryCompletion *comple;
 
@@ -41,10 +41,10 @@ char note_path[] = "../db/note.bt";
 char ui_path[] = "../ui/dict-app.glade";
 char history_path[] = "../db/history.txt";
 
-int y_hoc,toan_tin, dtvt, xay_dung, dien_lanh, hh_vat_lieu, dien, ckct;
+int y_hoc, toan_tin, dtvt, xay_dung, dien_lanh, hh_vat_lieu, dien, ckct;
 int kinh_te, ky_thuat;
 int filter_ghi_chu;
-int num_of_ques=30;
+int num_of_ques = 30;
 
 JRB *game_tree;
 int game_tree_size;
@@ -429,213 +429,219 @@ void practice()
     btcls(note);
 }
 
-typedef struct {
-  char *eng;
-  char *vie;
+typedef struct
+{
+    char *eng;
+    char *vie;
 } word;
 
-word *make_word(char *eng, char *vie) {
-  word *w = (word*)malloc(sizeof(word));
-  w->eng = strdup(eng);
-  w->vie = strdup(vie);
-  return w;
+word *make_word(char *eng, char *vie)
+{
+    word *w = (word *)malloc(sizeof(word));
+    w->eng = strdup(eng);
+    w->vie = strdup(vie);
+    return w;
 }
 void on_btn_game_clicked()
 {
     // gtk_widget_destroy(window_note);
     GtkBuilder *builder;
- 
+
     builder = gtk_builder_new_from_file("../ui/dict-app.glade");
 
     window_question_filter = GTK_WIDGET(gtk_builder_get_object(builder, "window_question_filter"));
-    
-    lv_y_hoc=   GTK_WIDGET(gtk_builder_get_object(builder, "lv_y_hoc"));
-    lv_toan_tin=   GTK_WIDGET(gtk_builder_get_object(builder, "lv_toan_tin"));
-    lv_dtvt=   GTK_WIDGET(gtk_builder_get_object(builder, "lv_dtvt"));
-    lv_xay_dung=   GTK_WIDGET(gtk_builder_get_object(builder, "lv_xay_dung"));
-    lv_dien_lanh=   GTK_WIDGET(gtk_builder_get_object(builder, "lv_dien_lanh"));
-    lv_hh_vat_lieu=   GTK_WIDGET(gtk_builder_get_object(builder, "lv_hh_vat_lieu"));
-    lv_dien=   GTK_WIDGET(gtk_builder_get_object(builder, "lv_dien"));
-    lv_ckct=   GTK_WIDGET(gtk_builder_get_object(builder, "lv_ckct"));
-    cn_kinh_te=   GTK_WIDGET(gtk_builder_get_object(builder, "cn_kinh_te"));
-    cn_ky_thuat=   GTK_WIDGET(gtk_builder_get_object(builder, "cn_ky_thuat"));
-    tu_ghi_chu=   GTK_WIDGET(gtk_builder_get_object(builder, "tu_ghi_chu"));
-    question_num=   GTK_WIDGET(gtk_builder_get_object(builder, "question_num"));
+
+    lv_y_hoc = GTK_WIDGET(gtk_builder_get_object(builder, "lv_y_hoc"));
+    lv_toan_tin = GTK_WIDGET(gtk_builder_get_object(builder, "lv_toan_tin"));
+    lv_dtvt = GTK_WIDGET(gtk_builder_get_object(builder, "lv_dtvt"));
+    lv_xay_dung = GTK_WIDGET(gtk_builder_get_object(builder, "lv_xay_dung"));
+    lv_dien_lanh = GTK_WIDGET(gtk_builder_get_object(builder, "lv_dien_lanh"));
+    lv_hh_vat_lieu = GTK_WIDGET(gtk_builder_get_object(builder, "lv_hh_vat_lieu"));
+    lv_dien = GTK_WIDGET(gtk_builder_get_object(builder, "lv_dien"));
+    lv_ckct = GTK_WIDGET(gtk_builder_get_object(builder, "lv_ckct"));
+    cn_kinh_te = GTK_WIDGET(gtk_builder_get_object(builder, "cn_kinh_te"));
+    cn_ky_thuat = GTK_WIDGET(gtk_builder_get_object(builder, "cn_ky_thuat"));
+    tu_ghi_chu = GTK_WIDGET(gtk_builder_get_object(builder, "tu_ghi_chu"));
+    question_num = GTK_WIDGET(gtk_builder_get_object(builder, "question_num"));
 
     gtk_builder_connect_signals(builder, NULL);
     gtk_widget_show(window_question_filter);
-
-
 }
-void get_filter(){
-    y_hoc = gtk_toggle_button_get_active(lv_y_hoc); 
-    toan_tin=   gtk_toggle_button_get_active(lv_toan_tin);
-    dtvt=   gtk_toggle_button_get_active(lv_dtvt);
-    xay_dung=   gtk_toggle_button_get_active(lv_xay_dung);
-    dien_lanh=   gtk_toggle_button_get_active(lv_dien_lanh);
-    hh_vat_lieu=   gtk_toggle_button_get_active(lv_hh_vat_lieu);
-    dien=   gtk_toggle_button_get_active(lv_dien);
-    ckct=   gtk_toggle_button_get_active(lv_ckct);
-    kinh_te=   gtk_toggle_button_get_active(cn_kinh_te);
-    ky_thuat=   gtk_toggle_button_get_active(cn_ky_thuat);
-    filter_ghi_chu=   gtk_toggle_button_get_active(tu_ghi_chu);
+void get_filter()
+{
+    y_hoc = gtk_toggle_button_get_active(lv_y_hoc);
+    toan_tin = gtk_toggle_button_get_active(lv_toan_tin);
+    dtvt = gtk_toggle_button_get_active(lv_dtvt);
+    xay_dung = gtk_toggle_button_get_active(lv_xay_dung);
+    dien_lanh = gtk_toggle_button_get_active(lv_dien_lanh);
+    hh_vat_lieu = gtk_toggle_button_get_active(lv_hh_vat_lieu);
+    dien = gtk_toggle_button_get_active(lv_dien);
+    ckct = gtk_toggle_button_get_active(lv_ckct);
+    kinh_te = gtk_toggle_button_get_active(cn_kinh_te);
+    ky_thuat = gtk_toggle_button_get_active(cn_ky_thuat);
+    filter_ghi_chu = gtk_toggle_button_get_active(tu_ghi_chu);
     num_of_ques = atoi(gtk_entry_get_text(GTK_ENTRY(question_num)));
-    if(num_of_ques < 4){ num_of_ques =30;}
-    
+    if (num_of_ques < 4)
+    {
+        num_of_ques = 30;
+    }
 }
-void print_question_tree(JRB question_tree) {
-  JRB ptr;
-  jrb_traverse(ptr, question_tree) {
-    word *w = (word*)ptr->val.v;
-    printf("%d: ", ptr->key.i);
-    printf("%s, ", w->eng);
-    printf("%s\n", w->vie);
-
-  }
-  
+void print_question_tree(JRB question_tree)
+{
+    JRB ptr;
+    jrb_traverse(ptr, question_tree)
+    {
+        word *w = (word *)ptr->val.v;
+        printf("%d: ", ptr->key.i);
+        printf("%s, ", w->eng);
+        printf("%s\n", w->vie);
+    }
 }
-char * get_mean(char* vie, char* lv)
+char *get_mean(char *vie, char *lv)
 {
     char *start, *end;
-    char *target=NULL;
+    char *target = NULL;
     // printf("lv: %s", lv);
     // return vie;
-    start=strstr(vie,lv);
-    if(start!=NULL){
+    start = strstr(vie, lv);
+    if (start != NULL)
+    {
 
         start += strlen(lv);
-        if (end = strstr( start, "@" ))
-            {
-            target = ( char * )malloc( end - start + 1 );
-            memcpy( target, start, end - start );
+        if (end = strstr(start, "@"))
+        {
+            target = (char *)malloc(end - start + 1);
+            memcpy(target, start, end - start);
             target[end - start] = '\0';
             printf("target: %s\n", target);
             return target;
-        // i++;
-        // jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,target)});
-            }
-            else if( end = strstr( start, "\0" )) {
-                printf("start: %s\n", start);
+            // i++;
+            // jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,target)});
+        }
+        else if (end = strstr(start, "\0"))
+        {
+            printf("start: %s\n", start);
             return start;
             // i++;
             // jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,start)});
-            }
+        }
     }
     strcpy(start, "empty");
     return start;
 }
-void insert_game_tree(BTA* source, char* lv){
-    int i=0;
+void insert_game_tree(BTA *source, char filter[][50])
+{
+    int i = 0;
     char *start, *end;
-    char *target=NULL;
+    char *target = NULL;
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
     int rsize, flag = 0;
 
-    btpos(source,ZSTART);
-     if(strcmp(lv,"empty")==0){
-        while (!btseln(source, eng, vie, MAX, &rsize))
-        {
-        if(i>num_of_ques) break;
-        i++;
-        jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,vie)});
-        }
-        game_tree_size= i;
-    }
-    else{
-    while (!btseln(source, eng, vie, MAX, &rsize))
-    {
-        //tach lay nghia
-        if(i>num_of_ques) break;
-        if(lv!=NULL){
-        start=strstr(vie,lv);
-        if(start!=NULL){
-            start += strlen(lv);
-            if ( end = strstr( start, "@" ))
-             { target = ( char * )malloc( end - start + 1 );
-            memcpy( target, start, end - start );
-            target[end - start] = '\0';
-            if(strlen(target)>0){
-                i++;
-                jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,target)});
-            }
-             }
-             else if( end = strstr( start, "\0" )) {
-                if(strlen(start)>0){
-                    i++;
-                    jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,start)});
-                }
-             }
-            }
-        }
-        else{
-            i++;
-            jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,start)});
-        }
-    }
-    game_tree_size=i;
-    }
+    btpos(source, ZSTART);
+    for (int j = 0; j <10; j++)
+        if (filter[j][0] != '\0')
+            printf("%s\n", filter[j]);
+
+    // if (strcmp(lv, "empty") == 0)
+    // {
+    //     while (!btseln(source, eng, vie, MAX, &rsize))
+    //     {
+    //         if (i > num_of_ques)
+    //             break;
+    //         i++;
+    //         jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng, vie)});
+    //     }
+    //     game_tree_size = i;
+    // }
+    // else
+    // {
+    //     while (!btseln(source, eng, vie, MAX, &rsize))
+    //     {
+    //         //tach lay nghia
+    //         if (i > num_of_ques)
+    //             break;
+    //         if (lv != NULL)
+    //         {
+    //             start = strstr(vie, lv);
+    //             if (start != NULL)
+    //             {
+    //                 start += strlen(lv);
+    //                 if (end = strstr(start, "@"))
+    //                 {
+    //                     target = (char *)malloc(end - start + 1);
+    //                     memcpy(target, start, end - start);
+    //                     target[end - start] = '\0';
+    //                     if (strlen(target) > 0)
+    //                     {
+    //                         i++;
+    //                         jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng, target)});
+    //                     }
+    //                 }
+    //                 else if (end = strstr(start, "\0"))
+    //                 {
+    //                     if (strlen(start) > 0)
+    //                     {
+    //                         i++;
+    //                         jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng, start)});
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         else
+    //         {
+    //             i++;
+    //             jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng, start)});
+    //         }
+    //     }
+    //     game_tree_size = i;
+    // }
+    btcls(note);
 }
-void new_game(){
-    
+void new_game()
+{
     get_filter();
     gtk_widget_destroy(window_question_filter);
-
+    note = btopn(note_path, 0, 0);
     int SIZE_OF_NOTE = 0;
-    
-
-
     game_tree = make_jrb();
+    char filter[10][50];
+    memset(filter, '\0', sizeof(filter));
+    if (y_hoc)
+        strcpy(filter[0], "@Lĩnh vực: y học\n");
+    if (toan_tin)
+        strcpy(filter[1], "@Lĩnh vực: toán & tin\n");
+    if (dtvt)
+        strcpy(filter[2], "@Lĩnh vực: điện tử & viễn thông\n");
+    if (xay_dung)
+        strcpy(filter[3], "@Lĩnh vực: xây dựng\n");
+    if (dien_lanh)
+        strcpy(filter[4], "@Lĩnh vực: điện lạnh\n");
+    if (hh_vat_lieu)
+        strcpy(filter[5], "@Lĩnh vực: hóa học & vật liệu\n");
+    if (dien)
+        strcpy(filter[6], "@Lĩnh vực: điện\n");
+    if (ckct)
+        strcpy(filter[7], "@Lĩnh vực: cơ khí & công trình\n");
+    if (ky_thuat)
+        strcpy(filter[8], "@Chuyên ngành kỹ thuật\n");
+    if (kinh_te)
+        strcpy(filter[9], "@Chuyên ngành kinh tế\n");
+    if (filter_ghi_chu)
+        insert_game_tree(note, filter);
+    else
+        insert_game_tree(dict, filter);
 
-    
-    char *lv= (char *)malloc(sizeof(char) * MAX);
-    strcpy(lv,"empty");
-    // toan_tin, dtvt, xay_dung, dien_lanh, hh_vat_lieu, dien, ckct
-    if(y_hoc){
-        strcpy(lv, "@Lĩnh vực: y học\n");
-    }
-    if(toan_tin){
-        strcpy(lv, "@Lĩnh vực: toán & tin\n");
-    }
-    if(dtvt){
-        strcpy(lv, "@Lĩnh vực: điện tử & viễn thông\n");
-    }
-    if(xay_dung){
-        strcpy(lv, "@Lĩnh vực: xây dựng\n");
-    }
-    if(dien_lanh){
-        strcpy(lv, "@Lĩnh vực: điện lạnh\n");
-    }
-    if(hh_vat_lieu){
-        strcpy(lv, "@Lĩnh vực: hóa học & vật liệu\n");
-    }
-    if(dien){
-        strcpy(lv, "@Lĩnh vực: điện\n");
-    }
-    if(ckct){
-        strcpy(lv, "@Lĩnh vực: cơ khí & công trình\n");
-    }
-    if(ky_thuat){
-        strcpy(lv,"@Chuyên ngành kỹ thuật\n");
-    }
-    if(kinh_te){
-        strcpy(lv,"@Chuyên ngành kinh tế\n");
-    }
-    if(filter_ghi_chu){
-        insert_game_tree(note,lv);
-    }
-    else insert_game_tree(dict,lv);
-    
-    
     if (game_tree_size == 0)
     {
         jrb_free_tree(game_tree);
-        show_message(window_question_filter,GTK_MESSAGE_ERROR, "ERROR", "Danh sách từ trống, không thể chơi trò chơi" );
+        show_message(window_question_filter, GTK_MESSAGE_ERROR, "ERROR", "Danh sách từ trống, không thể chơi trò chơi");
         return;
     }
-    else if (game_tree_size > 0 && game_tree_size < 4){
+    else if (game_tree_size > 0 && game_tree_size < 4)
+    {
         jrb_free_tree(game_tree);
-        show_message(window_question_filter,GTK_MESSAGE_ERROR, "ERROR", "Danh sách từ cần có 4 từ trở lên" );
+        show_message(window_question_filter, GTK_MESSAGE_ERROR, "ERROR", "Danh sách từ cần có 4 từ trở lên");
         return;
     }
 
@@ -652,7 +658,7 @@ void new_game(){
     question = GTK_WIDGET(gtk_builder_get_object(builder, "question"));
     total_num = GTK_WIDGET(gtk_builder_get_object(builder, "total_num"));
     correct_num = GTK_WIDGET(gtk_builder_get_object(builder, "correct_num"));
-    
+
     g_signal_connect(ans_1, "button-press-event", G_CALLBACK(on_check_vie1_clicked), NULL);
     g_signal_connect(ans_2, "button-press-event", G_CALLBACK(on_check_vie2_clicked), NULL);
     g_signal_connect(ans_3, "button-press-event", G_CALLBACK(on_check_vie3_clicked), NULL);
@@ -662,35 +668,37 @@ void new_game(){
     gtk_widget_show(window_game);
     new_record_result_of_game();
     new_question();
-    
-
 }
-void end_game(){
-    gtk_label_set_text(question, "Test complete!"); 
+void end_game()
+{
+    gtk_label_set_text(question, "Test complete!");
     set_mean_textview_text(ans_1, "");
     set_mean_textview_text(ans_2, "");
     set_mean_textview_text(ans_3, "");
     set_mean_textview_text(ans_4, "");
 }
 
-void new_question(){
-    int i =game_tree_size;
+void new_question()
+{
+    int i = game_tree_size;
     time_t t;
     int key_word_correct = 0;
     int key_word2;
     int key_word3;
-    int  rsize=0;
+    int rsize = 0;
     char buffer1[MAX];
     char buffer2[MAX];
     char buffer3[MAX];
     // srand((unsigned)time(&t));
-    
+
     is_answed(FALSE);
     game_result.total++;
 
-    if(game_result.total> num_of_ques) {
-        end_game(); 
-        return; };
+    if (game_result.total > num_of_ques)
+    {
+        end_game();
+        return;
+    };
 
     key_word_correct = rand() % i + 1;
     int key_word1 = key_word2 = key_word3 = key_word_correct;
@@ -708,21 +716,21 @@ void new_question(){
         key_word3 = rand() % i + 1;
     }
 
-    word* w= jrb_find_int(game_tree, key_word_correct)->val.v;
-    word* w1= jrb_find_int(game_tree, key_word1)->val.v;
-    strcpy(buffer1,w1->vie) ;
-    word* w2= jrb_find_int(game_tree, key_word2)->val.v;
-    strcpy(buffer2,w2->vie) ;
-    word* w3= jrb_find_int(game_tree, key_word3)->val.v;
-    strcpy(buffer3,w3->vie) ;
- 
-    char* str= (char *)malloc(sizeof(char) * MAX);
-    sprintf(str,"%d/%d", game_result.total, num_of_ques);
+    word *w = jrb_find_int(game_tree, key_word_correct)->val.v;
+    word *w1 = jrb_find_int(game_tree, key_word1)->val.v;
+    strcpy(buffer1, w1->vie);
+    word *w2 = jrb_find_int(game_tree, key_word2)->val.v;
+    strcpy(buffer2, w2->vie);
+    word *w3 = jrb_find_int(game_tree, key_word3)->val.v;
+    strcpy(buffer3, w3->vie);
+
+    char *str = (char *)malloc(sizeof(char) * MAX);
+    sprintf(str, "%d/%d", game_result.total, num_of_ques);
     gtk_label_set_text(total_num, str);
-    sprintf(str,"%d", game_result.correct_num);
+    sprintf(str, "%d", game_result.correct_num);
     gtk_label_set_text(correct_num, str);
-    
-    gtk_label_set_text(question, w->eng );
+
+    gtk_label_set_text(question, w->eng);
     if (key_check == 1)
     {
 
@@ -752,7 +760,6 @@ void new_question(){
         set_mean_textview_text(ans_3, buffer2);
         set_mean_textview_text(ans_1, buffer3);
     }
-    
 }
 
 void new_record_result_of_game()
@@ -765,7 +772,6 @@ void out_game()
     gtk_widget_hide(window_game);
     save_record_result_of_game();
     jrb_free_tree(game_tree);
-
 }
 void save_record_result_of_game()
 {
@@ -786,9 +792,7 @@ void save_record_result_of_game()
 }
 void new_question_fix()
 {
-
     int i = 0;
-
     is_answed(FALSE);
     note = btopn(note_path, 0, 0);
     btpos(note, ZSTART);
@@ -893,37 +897,38 @@ void is_answed(int bool)
     gtk_widget_set_sensitive(ans_3, !bool);
     gtk_widget_set_sensitive(ans_4, !bool);
 }
-void show_correct(int bool){
-        GdkColor color;
+void show_correct(int bool)
+{
+    GdkColor color;
 
-        if(bool) gdk_color_parse("red", &color);
-        else return hide_correct();
+    if (bool)
+        gdk_color_parse("red", &color);
+    else
+        return hide_correct();
 
-        if(key_check==1){
-      gtk_widget_modify_fg( GTK_WIDGET(ans_1), GTK_STATE_NORMAL, &color );
-        }
-        else if (key_check==2)
-        {
-      gtk_widget_modify_fg( GTK_WIDGET(ans_2), GTK_STATE_NORMAL, &color );
-            
-        }
-         else if (key_check==3)
-        {
-      gtk_widget_modify_fg( GTK_WIDGET(ans_3), GTK_STATE_NORMAL, &color );
-            
-        }
-         else if (key_check==4)
-        {
-      gtk_widget_modify_fg( GTK_WIDGET(ans_4), GTK_STATE_NORMAL, &color );
-            
-        }
-        
+    if (key_check == 1)
+    {
+        gtk_widget_modify_fg(GTK_WIDGET(ans_1), GTK_STATE_NORMAL, &color);
+    }
+    else if (key_check == 2)
+    {
+        gtk_widget_modify_fg(GTK_WIDGET(ans_2), GTK_STATE_NORMAL, &color);
+    }
+    else if (key_check == 3)
+    {
+        gtk_widget_modify_fg(GTK_WIDGET(ans_3), GTK_STATE_NORMAL, &color);
+    }
+    else if (key_check == 4)
+    {
+        gtk_widget_modify_fg(GTK_WIDGET(ans_4), GTK_STATE_NORMAL, &color);
+    }
 }
-void hide_correct(){
-    gtk_widget_modify_fg( GTK_WIDGET(ans_1), GTK_STATE_NORMAL, NULL );
-    gtk_widget_modify_fg( GTK_WIDGET(ans_2), GTK_STATE_NORMAL, NULL );
-    gtk_widget_modify_fg( GTK_WIDGET(ans_3), GTK_STATE_NORMAL, NULL );
-    gtk_widget_modify_fg( GTK_WIDGET(ans_4), GTK_STATE_NORMAL, NULL );
+void hide_correct()
+{
+    gtk_widget_modify_fg(GTK_WIDGET(ans_1), GTK_STATE_NORMAL, NULL);
+    gtk_widget_modify_fg(GTK_WIDGET(ans_2), GTK_STATE_NORMAL, NULL);
+    gtk_widget_modify_fg(GTK_WIDGET(ans_3), GTK_STATE_NORMAL, NULL);
+    gtk_widget_modify_fg(GTK_WIDGET(ans_4), GTK_STATE_NORMAL, NULL);
 }
 void on_check_vie1_clicked(GtkButton *button)
 {
