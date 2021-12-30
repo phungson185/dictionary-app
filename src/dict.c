@@ -35,7 +35,6 @@ FILE *f;
 char buftrans[MAX];
 char his[MAX];
 int key_check;
-int lv_num;
 
 char dict_path[] = "../db/AnhViet.dat";
 char note_path[] = "../db/note.bt";
@@ -43,9 +42,9 @@ char ui_path[] = "../ui/dict-app.glade";
 char history_path[] = "../db/history.txt";
 
 int y_hoc, toan_tin, dtvt, xay_dung, dien_lanh, hh_vat_lieu, dien, ckct;
-int kinh_te, ky_thuat;
-int filter_ghi_chu;
+int kinh_te, ky_thuat, filter_ghi_chu;
 int num_of_ques = 30;
+int lv_num, *ques_arr;
 
 JRB *game_tree;
 int game_tree_size;
@@ -498,38 +497,6 @@ void print_question_tree(JRB question_tree)
         printf("%s\n", w->vie);
     }
 }
-char *get_mean(char *vie, char *lv)
-{
-    char *start, *end;
-    char *target = NULL;
-    // printf("lv: %s", lv);
-    // return vie;
-    start = strstr(vie, lv);
-    if (start != NULL)
-    {
-
-        start += strlen(lv);
-        if (end = strstr(start, "@"))
-        {
-            target = (char *)malloc(end - start + 1);
-            memcpy(target, start, end - start);
-            target[end - start] = '\0';
-            printf("target: %s\n", target);
-            return target;
-            // i++;
-            // jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,target)});
-        }
-        else if (end = strstr(start, "\0"))
-        {
-            printf("start: %s\n", start);
-            return start;
-            // i++;
-            // jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng,start)});
-        }
-    }
-    strcpy(start, "empty");
-    return start;
-}
 void insert_game_tree(BTA *source, char filter[][50])
 {
     int i = 0;
@@ -546,9 +513,6 @@ void insert_game_tree(BTA *source, char filter[][50])
 
     while (!btseln(source, eng, vie, MAX, &rsize))
     {
-        //tach lay nghia
-        if (i > num_of_ques)
-            break;
         strcpy(mean, "");
         check_lv = 0;
 
@@ -556,7 +520,7 @@ void insert_game_tree(BTA *source, char filter[][50])
         {
             if (filter[j][0] != '\0')
             {
-            
+
                 start = end = target = NULL;
 
                 strcpy(lv, filter[j]);
@@ -573,7 +537,6 @@ void insert_game_tree(BTA *source, char filter[][50])
                         target[end - start] = '\0';
                         if (strlen(target) > 0)
                         {
-                            i++;
                             strcat(mean, lv);
                             strcat(mean, target);
                         }
@@ -582,7 +545,6 @@ void insert_game_tree(BTA *source, char filter[][50])
                     {
                         if (strlen(start) > 0)
                         {
-                            i++;
                             strcat(mean, lv);
                             strcat(mean, start);
                         }
@@ -594,7 +556,8 @@ void insert_game_tree(BTA *source, char filter[][50])
         }
         if (strlen(mean) > 0 && check_lv == lv_num)
         {
-            // printf("eng: %s, mean: %s\n ",eng, mean);
+            i++;
+            // printf("id: %d eng: %s, mean: %s\n ", i, eng, mean);
             jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng, mean)});
         }
     }
@@ -603,13 +566,34 @@ void insert_game_tree(BTA *source, char filter[][50])
 
     btcls(note);
 }
+void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void create_radom_arr()
+{
+    // game_tree_size
+    for (int i = 0; i < game_tree_size; i++)
+    {
+        ques_arr[i] = i;
+    }
+    for (int i = game_tree_size - 1; i >= 0; i--)
+    {
+        int j = rand() % (i + 1);
+        swap(&ques_arr[i], &ques_arr[j]);
+    }
+}
 void new_game()
 {
     get_filter();
     gtk_widget_destroy(window_question_filter);
-    note = btopn(note_path, 0, 0);
-    int SIZE_OF_NOTE = 0;
+
+    ques_arr = (int *)malloc((sizeof(int) * num_of_ques));
     game_tree = make_jrb();
+    note = btopn(note_path, 0, 0);
 
     char filter[10][50];
     lv_num = 0;
@@ -669,6 +653,8 @@ void new_game()
         insert_game_tree(note, filter);
     else
         insert_game_tree(dict, filter);
+
+    create_radom_arr();
 
     if (game_tree_size == 0)
     {
@@ -738,7 +724,8 @@ void new_question()
         return;
     };
 
-    key_word_correct = rand() % i + 1;
+    key_word_correct = ques_arr[game_result.total-1]+1;
+
     int key_word1 = key_word2 = key_word3 = key_word_correct;
     key_check = rand() % 4 + 1;
     while (key_word1 == key_word_correct)
@@ -827,105 +814,6 @@ void save_record_result_of_game()
 
     fprintf(f, "%s\n", buf);
     fclose(f);
-}
-void new_question_fix()
-{
-    int i = 0;
-    is_answed(FALSE);
-    note = btopn(note_path, 0, 0);
-    btpos(note, ZSTART);
-    int SIZE_OF_NOTE = 0;
-    char *eng = (char *)malloc(sizeof(char) * MAX);
-    char *vie = (char *)malloc(sizeof(char) * MAX);
-    int rsize, flag = 0;
-
-    JRB game_tree = make_jrb();
-    while (!btseln(note, eng, vie, MAX, &rsize))
-    {
-        i++;
-        jrb_insert_int(game_tree, i, (Jval){.s = strdup(eng)});
-    }
-
-    if (i == 0)
-    {
-        btcls(note);
-        jrb_free_tree(game_tree);
-        set_mean_textview_text(textview4, "Danh sách từ khó trống, không thể chơi trò chơi");
-        return -1;
-    }
-    else if (i > 0 && i < 4)
-    {
-        btcls(note);
-        jrb_free_tree(game_tree);
-        set_mean_textview_text(textview4, "Danh sách từ khó cần có 4 từ trở lên");
-        return -1;
-    }
-    else
-    {
-        set_mean_textview_text(textview4, "");
-    }
-
-    time_t t;
-    int key_word_correct = 0;
-    int key_word2;
-    int key_word3;
-    char buffer1[MAX];
-    char buffer2[MAX];
-    char buffer3[MAX];
-    srand((unsigned)time(&t));
-
-    key_word_correct = rand() % i + 1;
-    int key_word1 = key_word2 = key_word3 = key_word_correct;
-    gtk_label_set_text(GTK_LABEL(lbl_eng), jrb_find_int(game_tree, key_word_correct)->val.s);
-    btsel(note, jrb_find_int(game_tree, key_word_correct)->val.s, vie, MAX, &rsize);
-    key_check = rand() % 4 + 1;
-    while (key_word1 == key_word_correct)
-    {
-        key_word1 = rand() % i + 1;
-    }
-    while (key_word2 == key_word_correct || key_word2 == key_word1)
-    {
-        key_word2 = rand() % i + 1;
-    }
-    while (key_word3 == key_word_correct || key_word3 == key_word1 || key_word3 == key_word2)
-    {
-        key_word3 = rand() % i + 1;
-    }
-    btsel(note, jrb_find_int(game_tree, key_word1)->val.s, buffer1, MAX, &rsize);
-    btsel(note, jrb_find_int(game_tree, key_word2)->val.s, buffer2, MAX, &rsize);
-    btsel(note, jrb_find_int(game_tree, key_word3)->val.s, buffer3, MAX, &rsize);
-    if (key_check == 1)
-    {
-
-        gtk_button_set_label(check_vie1, vie);
-        gtk_button_set_label(check_vie2, buffer1);
-        gtk_button_set_label(check_vie3, buffer2);
-        gtk_button_set_label(check_vie4, buffer3);
-    }
-    else if (key_check == 2)
-    {
-        gtk_button_set_label(check_vie2, vie);
-        gtk_button_set_label(check_vie1, buffer1);
-        gtk_button_set_label(check_vie3, buffer2);
-        gtk_button_set_label(check_vie4, buffer3);
-    }
-    else if (key_check == 3)
-    {
-        gtk_button_set_label(check_vie3, vie);
-        gtk_button_set_label(check_vie2, buffer1);
-        gtk_button_set_label(check_vie1, buffer2);
-        gtk_button_set_label(check_vie4, buffer3);
-    }
-    else
-    {
-        gtk_button_set_label(check_vie4, vie);
-        gtk_button_set_label(check_vie2, buffer1);
-        gtk_button_set_label(check_vie3, buffer2);
-        gtk_button_set_label(check_vie1, buffer3);
-    }
-    btcls(note);
-    jrb_free_tree(game_tree);
-    game_result.total++;
 }
 void is_answed(int bool)
 {
@@ -1069,7 +957,7 @@ void get_history()
         strcpy(his, buffer);
     }
     strcat(his, "\n");
-    printf(his);
+    // printf(his);
     fclose(f);
 }
 void add_to_history(char *buf)
@@ -1083,23 +971,7 @@ void add_to_history(char *buf)
     fprintf(f, "%s", buf);
     fclose(f);
 }
-void delete_word_in_history(char *buf)
-{
-    // char line[MAX];
-    // if ((f = fopen("../db/history.txt", "w")) == NULL)
-    // {
-    //     printf("Lỗi không thể mở file.\n");
-    //     return -1;
-    // }
-    // while (fgets(line, MAX, f))
-    // {
-    //     printf("line\n");
-    //     if(strcmp(buf, line)==0){
-    //         fprintf(f, "%s", "");
-    //     }
-    // }
-    // fclose(f);
-}
+
 void rewrite_history(char *his)
 {
 }
