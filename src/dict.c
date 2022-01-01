@@ -8,6 +8,7 @@
 #include <btree.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define MAX 10000
 
@@ -28,9 +29,13 @@ GtkWidget *textview1, *textview2, *textview3, *textview4, *textview5, *textview_
 GtkWidget *lbl_eng, *check_vie1, *check_vie2, *check_vie3, *check_vie4;
 GtkWidget *lv_y_hoc, *lv_toan_tin, *lv_dtvt, *lv_xay_dung, *lv_dien_lanh, *lv_hh_vat_lieu, *lv_dien, *lv_ckct, *cn_kinh_te, *cn_ky_thuat, *tu_ghi_chu;
 GtkWidget *question, *ans_1, *ans_2, *ans_3, *ans_4, *total_num, *correct_num;
+GtkWidget *btn_next, *btn_back;
 
 BTA *dict;
 BTA *note;
+
+BTA *question_tree;
+
 FILE *f;
 char buftrans[MAX];
 char his[MAX];
@@ -40,18 +45,19 @@ char dict_path[] = "../db/AnhViet.dat";
 char note_path[] = "../db/note.bt";
 char ui_path[] = "../ui/dict-app.glade";
 char history_path[] = "../db/history.txt";
+char question_path[] = "../db/question.bt";
 
 int y_hoc, toan_tin, dtvt, xay_dung, dien_lanh, hh_vat_lieu, dien, ckct;
 int kinh_te, ky_thuat, filter_ghi_chu;
-int num_of_ques = 30;
-int lv_num, *ques_arr;
+long num_of_ques;
+long lv_num, *ques_arr;
 
-JRB *game_tree;
-int game_tree_size;
+// JRB *game_tree;
+long game_tree_size;
 
 typedef struct game_result
 {
-    int total;
+    long total;
     int correct_num;
 };
 struct game_result game_result;
@@ -444,7 +450,10 @@ word *make_word(char *eng, char *vie)
 }
 void on_btn_game_clicked()
 {
-    // gtk_widget_destroy(window_note);
+    question_tree = NULL;
+    question_tree = btcrt("../db/question.bt", 0, 0);
+    btcls(question_tree);
+
     GtkBuilder *builder;
 
     builder = gtk_builder_new_from_file("../ui/dict-app.glade");
@@ -481,10 +490,8 @@ void get_filter()
     ky_thuat = gtk_toggle_button_get_active(cn_ky_thuat);
     filter_ghi_chu = gtk_toggle_button_get_active(tu_ghi_chu);
     num_of_ques = atoi(gtk_entry_get_text(GTK_ENTRY(question_num)));
-    if (num_of_ques < 4)
-    {
+    if (num_of_ques == 0)
         num_of_ques = 30;
-    }
 }
 void print_question_tree(JRB question_tree)
 {
@@ -497,11 +504,20 @@ void print_question_tree(JRB question_tree)
         printf("%s\n", w->vie);
     }
 }
+
+char *make_long_to_string(long l)
+{
+    char *s = (char *)malloc(sizeof(char) * 10);
+    sprintf(s, "%ld", l);
+    return s;
+}
+
 void insert_game_tree(BTA *source, char filter[][50])
 {
-    int i = 0;
-    char *start, *end;
-    char *target = NULL;
+    long i = 0;
+    char *start;
+    char *end;
+    char *target;
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
     char *lv = (char *)malloc(sizeof(char) * MAX);
@@ -510,7 +526,7 @@ void insert_game_tree(BTA *source, char filter[][50])
     int rsize, check_lv = 0;
 
     btpos(source, ZSTART);
-
+    // btsel(source, "change", vie, MAX, &rsize);
     while (!btseln(source, eng, vie, MAX, &rsize))
     {
         strcpy(mean, "");
@@ -518,65 +534,106 @@ void insert_game_tree(BTA *source, char filter[][50])
 
         for (int j = 0; j < 10; j++)
         {
-            if (filter[j][0] != '\0')
+            if (strlen(filter[j]) > 0)
             {
 
-                start = end = target = NULL;
-
+                // puts(filter[j]);
                 strcpy(lv, filter[j]);
-                start = strstr(vie, lv);
-                if (start != NULL)
+                if (start = strstr(vie, lv))
                 {
-
                     check_lv++;
-                    start += strlen(lv);
-                    if (end = strstr(start, "@"))
+
+                    if (start = strtok(start, "@"))
                     {
-                        target = (char *)malloc(end - start + 1);
-                        memcpy(target, start, end - start);
-                        target[end - start] = '\0';
-                        if (strlen(target) > 0)
-                        {
-                            strcat(mean, lv);
-                            strcat(mean, target);
-                        }
+                        strcat(mean, "@");
+                        strcat(mean, start);
                     }
-                    else if (end = strstr(start, "\0"))
+                    else if (start = strtok(0, "\n"))
                     {
-                        if (strlen(start) > 0)
-                        {
-                            strcat(mean, lv);
-                            strcat(mean, start);
-                        }
+                        strcat(mean, "@");
+                        strcat(mean, start);
                     }
+
+                    // check_lv++;
+                    // start += strlen(lv);
+                    // if (end = strstr(start, "@"))
+                    // {
+                    //     target = (char *)malloc(end - start + 1);
+                    //     memcpy(target, start, end - start);
+                    //     target[end - start] = '\0';
+                    //     if (strlen(target) > 0)
+                    //     {
+                    //         strcat(mean, lv);
+                    //         strcat(mean, target);
+                    //     }
+                    // }
+                    // else if (end = strstr(start, "\0"))
+                    // {
+                    //     if (strlen(start) > 0)
+                    //     {
+                    //         strcat(mean, lv);
+                    //         strcat(mean, start);
+                    //     }
+                    // }
                 }
-                else
-                    break;
+                // else
+                //     break;
             }
         }
         if (strlen(mean) > 0 && check_lv == lv_num)
         {
             i++;
             // printf("id: %d eng: %s, mean: %s\n ", i, eng, mean);
-            jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng, mean)});
+            // jrb_insert_int(game_tree, i, (Jval){.v = make_word(eng, mean)});
+            // strcpy(eng, "change");
+            strcat(eng, "^");
+            strcat(eng, mean);
+            printf("%s\n", eng);
+            btins(question_tree, make_long_to_string(i), eng, strlen(eng) + 1);
+            // break;
         }
     }
     game_tree_size = i;
-    printf("game size: %d\n", i);
-
+    printf("game size: %ld\n", game_tree_size);
+    // free(eng);
+    // free(vie);
+    // free(lv);
+    // free(mean);
+    // free(start);
+    // free(end);
+    // free(target);
     btcls(note);
+    btcls(question_tree);
 }
-void swap(int *a, int *b)
+void swap(long *a, long *b)
 {
-    int temp = *a;
+    long temp = *a;
     *a = *b;
     *b = temp;
+}
+
+void printArray(long arr[], long n)
+{
+    for (long i = 0; i < n; i++)
+        printf("%ld ", arr[i]);
+    printf("\n");
+}
+
+void randomize(long arr[], long n)
+{
+    srand(time(NULL));
+
+    for (long i = n - 1; i > 0; i--)
+    {
+        long j = rand() % (i + 1);
+        swap(&arr[i], &arr[j]);
+    }
 }
 
 void create_radom_arr()
 {
     // game_tree_size
-    for (int i = 0; i < game_tree_size; i++)
+    for (int i = 0; i < num_of_ques; i++)
     {
         ques_arr[i] = i;
     }
@@ -591,9 +648,10 @@ void new_game()
     get_filter();
     gtk_widget_destroy(window_question_filter);
 
-    ques_arr = (int *)malloc((sizeof(int) * num_of_ques));
-    game_tree = make_jrb();
+    // game_tree = make_jrb();
     note = btopn(note_path, 0, 0);
+    question_tree = btopn(question_path, 0, 0);
+    // question_tree = btopn(question_path, 0, 0);
 
     char filter[10][50];
     lv_num = 0;
@@ -654,20 +712,24 @@ void new_game()
     else
         insert_game_tree(dict, filter);
 
-    create_radom_arr();
-
+    if (game_tree_size < num_of_ques)
+        num_of_ques = game_tree_size;
     if (game_tree_size == 0)
     {
-        jrb_free_tree(game_tree);
         show_message(window_question_filter, GTK_MESSAGE_ERROR, "ERROR", "Danh sách từ trống, không thể chơi trò chơi");
         return;
     }
     else if (game_tree_size > 0 && game_tree_size < 4)
     {
-        jrb_free_tree(game_tree);
         show_message(window_question_filter, GTK_MESSAGE_ERROR, "ERROR", "Danh sách từ cần có 4 từ trở lên");
         return;
     }
+
+    ques_arr = (long *)malloc((sizeof(long) * game_tree_size));
+
+    for (long i = 0; i < game_tree_size; i++)
+        ques_arr[i] = i + 1;
+    randomize(ques_arr, game_tree_size);
 
     GtkBuilder *builder;
 
@@ -683,6 +745,9 @@ void new_game()
     total_num = GTK_WIDGET(gtk_builder_get_object(builder, "total_num"));
     correct_num = GTK_WIDGET(gtk_builder_get_object(builder, "correct_num"));
 
+    btn_back = GTK_WIDGET(gtk_builder_get_object(builder, "btn_back"));
+    btn_next = GTK_WIDGET(gtk_builder_get_object(builder, "btn_next"));
+
     g_signal_connect(ans_1, "button-press-event", G_CALLBACK(on_check_vie1_clicked), NULL);
     g_signal_connect(ans_2, "button-press-event", G_CALLBACK(on_check_vie2_clicked), NULL);
     g_signal_connect(ans_3, "button-press-event", G_CALLBACK(on_check_vie3_clicked), NULL);
@@ -691,10 +756,12 @@ void new_game()
     gtk_builder_connect_signals(builder, NULL);
     gtk_widget_show(window_game);
     new_record_result_of_game();
+    question_tree = btopn(question_path, 0, 0);
     new_question();
 }
 void end_game()
 {
+    btcls(question_tree);
     gtk_label_set_text(question, "Test complete!");
     set_mean_textview_text(ans_1, "");
     set_mean_textview_text(ans_2, "");
@@ -702,89 +769,121 @@ void end_game()
     set_mean_textview_text(ans_4, "");
 }
 
+char *make_int_to_string(int i)
+{
+    char *str = (char *)malloc(sizeof(char) * 10);
+    sprintf(str, "%d", i);
+    return str;
+}
+
 void new_question()
 {
-    int i = game_tree_size;
+    long i = game_tree_size;
     time_t t;
-    int key_word_correct = 0;
-    int key_word2;
-    int key_word3;
+    long key_word_correct = 0;
+    long key_word2;
+    long key_word3;
     int rsize = 0;
-    char buffer1[MAX];
-    char buffer2[MAX];
-    char buffer3[MAX];
+    char *buffer_correct = (char *)malloc(sizeof(char) * MAX);
+    char *buffer1 = (char *)malloc(sizeof(char) * MAX);
+    char *buffer2 = (char *)malloc(sizeof(char) * MAX);
+    char *buffer3 = (char *)malloc(sizeof(char) * MAX);
     // srand((unsigned)time(&t));
 
     is_answed(FALSE);
+
+    if (game_result.total + 1 >= num_of_ques)
+    {
+        gtk_widget_set_sensitive(btn_back, FALSE);
+        gtk_widget_set_sensitive(btn_next, FALSE);
+    }
+
     game_result.total++;
 
-    if (game_result.total > num_of_ques)
-    {
-        end_game();
-        return;
-    };
-
-    key_word_correct = ques_arr[game_result.total-1]+1;
+    key_word_correct = ques_arr[game_result.total - 1];
 
     int key_word1 = key_word2 = key_word3 = key_word_correct;
     key_check = rand() % 4 + 1;
     while (key_word1 == key_word_correct)
     {
-        key_word1 = rand() % i + 1;
+        key_word1 = 1 + rand() % game_tree_size;
     }
     while (key_word2 == key_word_correct || key_word2 == key_word1)
     {
-        key_word2 = rand() % i + 1;
+        key_word2 = 1 + rand() % game_tree_size;
     }
     while (key_word3 == key_word_correct || key_word3 == key_word1 || key_word3 == key_word2)
     {
-        key_word3 = rand() % i + 1;
+        key_word3 = 1 + rand() % game_tree_size;
+    }
+    printf("%ld %ld %ld %ld\n", key_word_correct, key_word1, key_word2, key_word3);
+    char *word = (char *)malloc(sizeof(char) * MAX);
+    char *get_eng;
+    if (!btsel(question_tree, make_long_to_string(key_word_correct), word, MAX, &rsize))
+    {
+
+        gtk_label_set_text(question, strtok(word, "^"));
+        strcpy(buffer_correct, strtok(NULL, "^"));
     }
 
-    word *w = jrb_find_int(game_tree, key_word_correct)->val.v;
-    word *w1 = jrb_find_int(game_tree, key_word1)->val.v;
-    strcpy(buffer1, w1->vie);
-    word *w2 = jrb_find_int(game_tree, key_word2)->val.v;
-    strcpy(buffer2, w2->vie);
-    word *w3 = jrb_find_int(game_tree, key_word3)->val.v;
-    strcpy(buffer3, w3->vie);
+    if (!btsel(question_tree, make_long_to_string(key_word1), word, MAX, &rsize))
+    {
+        get_eng = strtok(word, "^");
+        strcpy(buffer1, strtok(NULL, "^"));
+    }
 
-    char *str = (char *)malloc(sizeof(char) * MAX);
+    if (!btsel(question_tree, make_long_to_string(key_word2), word, MAX, &rsize))
+    {
+        get_eng = strtok(word, "^");
+        strcpy(buffer2, strtok(NULL, "^"));
+    }
+
+    if (!btsel(question_tree, make_long_to_string(key_word3), word, MAX, &rsize))
+    {
+        get_eng = strtok(word, "^");
+        strcpy(buffer3, strtok(NULL, "^"));
+    }
+
+    char *str = (char *)malloc(sizeof(char) * 10);
     sprintf(str, "%d/%d", game_result.total, num_of_ques);
     gtk_label_set_text(total_num, str);
     sprintf(str, "%d", game_result.correct_num);
     gtk_label_set_text(correct_num, str);
-
-    gtk_label_set_text(question, w->eng);
     if (key_check == 1)
     {
-
-        set_mean_textview_text(ans_1, w->vie);
+        set_mean_textview_text(ans_1, buffer_correct);
         set_mean_textview_text(ans_2, buffer1);
         set_mean_textview_text(ans_3, buffer2);
         set_mean_textview_text(ans_4, buffer3);
     }
     else if (key_check == 2)
     {
-        set_mean_textview_text(ans_2, w->vie);
+        set_mean_textview_text(ans_2, buffer_correct);
         set_mean_textview_text(ans_1, buffer1);
         set_mean_textview_text(ans_3, buffer2);
         set_mean_textview_text(ans_4, buffer3);
     }
     else if (key_check == 3)
     {
-        set_mean_textview_text(ans_3, w->vie);
+        set_mean_textview_text(ans_3, buffer_correct);
         set_mean_textview_text(ans_2, buffer1);
         set_mean_textview_text(ans_1, buffer2);
         set_mean_textview_text(ans_4, buffer3);
     }
     else
     {
-        set_mean_textview_text(ans_4, w->vie);
+        set_mean_textview_text(ans_4, buffer_correct);
         set_mean_textview_text(ans_2, buffer1);
         set_mean_textview_text(ans_3, buffer2);
         set_mean_textview_text(ans_1, buffer3);
     }
+
+    // free(str);
+    // free(word);
+    // free(buffer_correct);
+    // free(buffer1);
+    // free(buffer2);
+    // free(buffer3);
 }
 
 void new_record_result_of_game()
@@ -794,13 +893,20 @@ void new_record_result_of_game()
 }
 void out_game()
 {
-    gtk_widget_hide(window_game);
+    gtk_widget_destroy(window_game);
+    char *end_info = (char *)malloc(sizeof(char) * 100);
+    strcpy(end_info, "Bạn đã hoàn thành bài thi!\n");
+    strcat(end_info, "Số câu đúng: ");
+    strcat(end_info, make_int_to_string(game_result.correct_num));
+    strcat(end_info, "/");
+    strcat(end_info, make_int_to_string(num_of_ques));
+    show_message(window_question_filter, GTK_MESSAGE_INFO, "KẾT THÚC", end_info);
+    free(end_info);
     save_record_result_of_game();
-    jrb_free_tree(game_tree);
 }
 void save_record_result_of_game()
 {
-    char line[MAX];
+    char end_time[30];
     char *buf = (char *)malloc(sizeof(char) * MAX);
 
     if ((f = fopen("../db/game_history.txt", "a")) == NULL)
@@ -810,8 +916,9 @@ void save_record_result_of_game()
     }
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
-    sprintf(buf, "%s\n%s%d\n%s%d\n%s", asctime(tm), "Total: ", game_result.total, "Correct: ", game_result.correct_num, "-------------------------------");
-
+    strcpy(end_time, asctime(tm));
+    end_time[strlen(end_time) - 1] = '\0';
+    sprintf(buf, "%s-%ld-%ld", end_time, game_result.correct_num, num_of_ques);
     fprintf(f, "%s\n", buf);
     fclose(f);
 }
@@ -903,22 +1010,85 @@ void show_game_his(GtkButton *button)
 
     textview5 = GTK_WIDGET(gtk_builder_get_object(builder, "textview5"));
 
-    char buffer[MAX];
-    char line[MAX];
-    if ((f = fopen("../db/game_history.txt", "r")) == NULL)
+    GtkTextBuffer *buffer;
+    GtkTextIter translation_iter, start, end;
+    buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview5));
+    gtk_text_buffer_get_start_iter(buffer, &start);
+    gtk_text_buffer_get_end_iter(buffer, &end);
+    gtk_text_buffer_delete(buffer, &start, &end);
+    gtk_text_buffer_create_tag(buffer, "red_fg", "foreground", "red", NULL);
+    gtk_text_buffer_create_tag(buffer, "yellow_fg", "foreground", "yellow", NULL);
+    gtk_text_buffer_create_tag(buffer, "green_fg", "foreground", "green", NULL);
+    gtk_text_buffer_get_iter_at_offset(buffer, &translation_iter, 0);
+
+    char *get_end_time;
+    char *get_correct_num;
+    char *get_game_tree_size;
+    FILE *fd;
+    int ch;
+    int count;
+    char line[100];
+    char len[100];
+    char buf[100];
+    int index = 0;
+        int i;
+
+    if ((fd = fopen("../db/game_history.txt", "r")) == NULL)
     {
         printf("Lỗi không thể mở file.\n");
         return -1;
     }
-    while (fgets(line, MAX, f))
-    {
-        strcat(buffer, line);
-    }
-    fclose(f);
 
-    set_mean_textview_text(textview5, buffer);
+    fseek(fd, 0, SEEK_END);
+    while (ftell(fd) > 1)
+    {
+        fseek(fd, -2, SEEK_CUR);
+        if (ftell(fd) <= 2)
+            break;
+        ch = fgetc(fd);
+        count = 0;
+        while (ch != '\n')
+        {
+            len[count++] = ch;
+            if (ftell(fd) < 2)
+                break;
+            fseek(fd, -2, SEEK_CUR);
+            ch = fgetc(fd);
+        }
+        for ( i = count - 1; i >= 0 && count > 0; i--)
+            buf[index++] = len[i];
+
+        get_end_time = strtok(buf, "-");
+        get_correct_num = strtok(NULL, "-");
+        get_game_tree_size = strtok(NULL, "-");
+        sprintf(line, "%-30s%-10s%-5s\n", get_end_time, get_correct_num, get_game_tree_size);
+        float lv = (atof(get_correct_num) / atof(get_game_tree_size)) * 10;
+        if (lv >= 0 && lv <= 3)
+            gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, line, -1, "red_fg", NULL);
+        else if (lv >= 4 && lv <= 6)
+            gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, line, -1, "yellow_fg", NULL);
+        else if (lv >= 7 && lv <= 10)
+            gtk_text_buffer_insert_with_tags_by_name(buffer, &translation_iter, line, -1, "green_fg", NULL);
+
+        index = 0;
+        memset(buf, '\0', 100);
+    }
+
+    fclose(fd);
+
     g_object_unref(builder);
     gtk_widget_show(window_game_history);
+}
+
+void delelte_all_game_history() {
+    FILE *fd;
+    if ((fd = fopen("../db/game_history.txt", "w")) == NULL)
+    {
+        printf("Lỗi không thể mở file.\n");
+        return -1;
+    }
+    fclose(fd);
+    set_mean_textview_text(textview5, "Danh sách trống !");
 }
 
 void delete_all_note()
