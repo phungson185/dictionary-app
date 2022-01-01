@@ -450,8 +450,7 @@ word *make_word(char *eng, char *vie)
 }
 void on_btn_game_clicked()
 {
-    question_tree = NULL;
-    question_tree = btcrt("../db/question.bt", 0, 0);
+    question_tree = btcrt(question_path, 0, 0);
     btcls(question_tree);
 
     GtkBuilder *builder;
@@ -759,15 +758,6 @@ void new_game()
     question_tree = btopn(question_path, 0, 0);
     new_question();
 }
-void end_game()
-{
-    btcls(question_tree);
-    gtk_label_set_text(question, "Test complete!");
-    set_mean_textview_text(ans_1, "");
-    set_mean_textview_text(ans_2, "");
-    set_mean_textview_text(ans_3, "");
-    set_mean_textview_text(ans_4, "");
-}
 
 char *make_int_to_string(int i)
 {
@@ -893,6 +883,7 @@ void new_record_result_of_game()
 }
 void out_game()
 {
+    btcls(question_tree);
     gtk_widget_destroy(window_game);
     char *end_info = (char *)malloc(sizeof(char) * 100);
     strcpy(end_info, "Bạn đã hoàn thành bài thi!\n");
@@ -900,10 +891,11 @@ void out_game()
     strcat(end_info, make_int_to_string(game_result.correct_num));
     strcat(end_info, "/");
     strcat(end_info, make_int_to_string(num_of_ques));
-    show_message(window_question_filter, GTK_MESSAGE_INFO, "KẾT THÚC", end_info);
+    show_message(window_main, GTK_MESSAGE_INFO, "KẾT THÚC", end_info);
     free(end_info);
     save_record_result_of_game();
 }
+
 void save_record_result_of_game()
 {
     char end_time[30];
@@ -1000,6 +992,7 @@ void on_check_vie4_clicked(GtkButton *button)
 }
 void show_game_his(GtkButton *button)
 {
+    gtk_widget_destroy(window_game_history);
     GtkBuilder *builder;
 
     builder = gtk_builder_new_from_file(ui_path);
