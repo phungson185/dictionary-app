@@ -1,0 +1,16 @@
+.window_main {
+    /* background-color: rgb(7, 46, 177); */
+    /* background-color: rgba(7, 46, 177, 0.9); */
+    background-image: url("../ui/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f4e2d543967552d71685a426e57413d3d2d3236383730373834362e313435366366386331373736366432362e6a7067.jpeg");
+}
+.button {
+    opacity: 0.9;
+    background: #F2F3F7;
+    border: rgb(0, 0, 0) 1px solid;
+    color:rgb(0, 0, 0);
+}
+
+.button:hover {
+    background: rgb(245, 245, 192);
+    color: rgb(26, 24, 24);
+}
