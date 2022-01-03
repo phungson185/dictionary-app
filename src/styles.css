@@ -1,16 +1,87 @@
-.window_main {
-    /* background-color: rgb(7, 46, 177); */
-    /* background-color: rgba(7, 46, 177, 0.9); */
-    background-image: url("../ui/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f4e2d543967552d71685a426e57413d3d2d3236383730373834362e313435366366386331373736366432362e6a7067.jpeg");
+.window_main, .window_extend, .window-game-history, .window-note, .window-game, .window-question-filter {
+    background-color: rgb(22, 26, 30);
 }
+
 .button {
-    opacity: 0.9;
-    background: #F2F3F7;
-    border: rgb(0, 0, 0) 1px solid;
-    color:rgb(0, 0, 0);
+    background: rgb(22, 26, 30);
+    border: rgb(14, 203, 129) 1px solid;
+    color:rgb(14, 203, 129);
+    font-weight: 600;
 }
 
 .button:hover {
-    background: rgb(245, 245, 192);
-    color: rgb(26, 24, 24);
+    background: rgb(14, 203, 129);
+    color: rgb(255, 255, 255);
+}
+
+.history-title {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: rgb(255, 255, 255);
+    margin-bottom: 0.5em;
+}
+
+ .search-text text, .game-history-text text, .note-text text{
+    background: rgb(22, 26, 30);
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+}
+
+.scroll-window, .scroll-window-game {
+    border: none;
+}
+
+.history-text text {
+    background: rgb(22, 26, 30);
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+    border: rgb(14, 203, 129) 1px solid;
+}
+.input {
+    background: rgb(22, 26, 30);
+    color: rgb(255, 255, 255);
+    border: rgb(14, 203, 129) 1px solid;
+    font-weight: 500;
+}
+
+.icon-main {
+    font-size: 12px;
+}
+
+.extend-label, .game-history-label {
+    font-size: 0.8em;
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+}
+
+.game-title, .filter-title {
+    color: rgb(255, 255, 255);
+}
+
+.game-des, .filter-des, .filter-option {
+    color: rgb(132, 142, 156);
+}
+
+.eng, .query-result {
+    color: rgb(240, 185, 11);
+}
+
+.vie text  {
+    background: rgb(22, 26, 30);
+    color: rgb(255, 255, 255);
+    border: rgb(255, 255, 255) 1px solid;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.filter-option:checked {
+    color: rgb(240, 185, 11);
+}
+
+.question-num {
+    color: rgb(246, 70, 93);
+}
+
+.correct-num {
+    color : rgb(14, 203, 129);
 }
