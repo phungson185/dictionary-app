@@ -30,7 +30,7 @@ GtkWidget *textview1, *textview2, *textview3, *textview4, *textview5, *textview_
 GtkWidget *lbl_eng, *check_vie1, *check_vie2, *check_vie3, *check_vie4;
 GtkWidget *lv_y_hoc, *lv_toan_tin, *lv_dtvt, *lv_xay_dung, *lv_dien_lanh, *lv_hh_vat_lieu, *lv_dien, *lv_ckct, *cn_kinh_te, *cn_ky_thuat, *tu_ghi_chu;
 GtkWidget *question, *ans_1, *ans_2, *ans_3, *ans_4, *total_num, *correct_num, *query_result;
-GtkWidget *btn_start, *btn_next, *btn_back;
+GtkWidget *btn_start, *btn_next;
 
 GtkCssProvider *provider;
 GdkDisplay *display;
@@ -742,7 +742,6 @@ void start()
     total_num = GTK_WIDGET(gtk_builder_get_object(builder, "total_num"));
     correct_num = GTK_WIDGET(gtk_builder_get_object(builder, "correct_num"));
 
-    btn_back = GTK_WIDGET(gtk_builder_get_object(builder, "btn_back"));
     btn_next = GTK_WIDGET(gtk_builder_get_object(builder, "btn_next"));
 
     g_signal_connect(ans_1, "button-press-event", G_CALLBACK(on_check_vie1_clicked), NULL);
@@ -783,10 +782,7 @@ void new_question()
     is_answed(FALSE);
 
     if (game_result.total + 1 >= num_of_ques)
-    {
-        gtk_widget_set_sensitive(btn_back, FALSE);
         gtk_widget_set_sensitive(btn_next, FALSE);
-    }
 
     game_result.total++;
 
@@ -1060,6 +1056,7 @@ void show_game_his()
         }
         for (i = count - 1; i >= 0 && count > 0; i--)
             buf[index++] = len[i];
+        buf[index] = '\0';
         puts(buf);
         get_end_time = strtok(buf, "-");
         get_correct_num = strtok(NULL, "-");

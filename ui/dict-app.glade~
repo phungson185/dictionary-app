@@ -296,7 +296,7 @@ Phùng Đình Sơn		20184189
         </child>
         <child>
           <object class="GtkLabel" id="question">
-            <property name="width_request">1009</property>
+            <property name="width_request">721</property>
             <property name="height_request">80</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
@@ -304,14 +304,14 @@ Phùng Đình Sơn		20184189
             <property name="justify">center</property>
             <property name="xalign">0.47999998927116394</property>
             <attributes>
-              <attribute name="font-desc" value="Sarai 30"/>
+              <attribute name="font-desc" value="Sarai Bold 30"/>
             </attributes>
             <style>
               <class name="eng"/>
             </style>
           </object>
           <packing>
-            <property name="x">16</property>
+            <property name="x">145</property>
             <property name="y">75</property>
           </packing>
         </child>
@@ -323,6 +323,9 @@ Phùng Đình Sơn		20184189
             <attributes>
               <attribute name="font-desc" value="Sans Bold 13"/>
             </attributes>
+            <style>
+              <class name="question-num"/>
+            </style>
           </object>
           <packing>
             <property name="x">980</property>
@@ -337,6 +340,9 @@ Phùng Đình Sơn		20184189
             <attributes>
               <attribute name="font-desc" value="Sans Bold 13"/>
             </attributes>
+            <style>
+              <class name="question-num"/>
+            </style>
           </object>
           <packing>
             <property name="x">893</property>
@@ -351,6 +357,9 @@ Phùng Đình Sơn		20184189
             <attributes>
               <attribute name="font-desc" value="Sans Bold 13"/>
             </attributes>
+            <style>
+              <class name="correct-num"/>
+            </style>
           </object>
           <packing>
             <property name="x">840</property>
@@ -365,6 +374,9 @@ Phùng Đình Sơn		20184189
             <attributes>
               <attribute name="font-desc" value="Sans Bold 13"/>
             </attributes>
+            <style>
+              <class name="correct-num"/>
+            </style>
           </object>
           <packing>
             <property name="x">980</property>
@@ -372,55 +384,40 @@ Phùng Đình Sơn		20184189
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="btn_back">
-            <property name="label" translatable="yes">Quay lại</property>
-            <property name="width_request">98</property>
-            <property name="height_request">42</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <style>
-              <class name="button"/>
-            </style>
-          </object>
-          <packing>
-            <property name="x">383</property>
-            <property name="y">502</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkButton" id="btn_next">
             <property name="label" translatable="yes">Kế tiếp</property>
-            <property name="width_request">98</property>
+            <property name="width_request">109</property>
             <property name="height_request">42</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="xalign">0</property>
             <signal name="clicked" handler="new_question" swapped="no"/>
             <style>
               <class name="button"/>
             </style>
           </object>
           <packing>
-            <property name="x">529</property>
+            <property name="x">451</property>
             <property name="y">502</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton">
             <property name="label" translatable="yes">Kết thúc</property>
-            <property name="width_request">98</property>
+            <property name="width_request">116</property>
             <property name="height_request">42</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="xalign">1</property>
             <signal name="clicked" handler="out_game" swapped="no"/>
             <style>
               <class name="button"/>
             </style>
           </object>
           <packing>
-            <property name="x">923</property>
+            <property name="x">905</property>
             <property name="y">502</property>
           </packing>
         </child>
@@ -492,8 +489,8 @@ Phùng Đình Sơn		20184189
             <child>
               <object class="GtkTextView" id="ans_3">
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
-                <property name="editable">False</property>
                 <property name="wrap_mode">word</property>
                 <property name="left_margin">7</property>
                 <property name="top_margin">3</property>
@@ -538,6 +535,30 @@ Phùng Đình Sơn		20184189
           <packing>
             <property name="x">553</property>
             <property name="y">337</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-media-next</property>
+            <property name="icon_size">3</property>
+          </object>
+          <packing>
+            <property name="x">527</property>
+            <property name="y">511</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-ok</property>
+            <property name="icon_size">3</property>
+          </object>
+          <packing>
+            <property name="x">913</property>
+            <property name="y">511</property>
           </packing>
         </child>
       </object>
