@@ -1,46 +1,56 @@
-.window_main, .window_extend, .window-game-history, .window-note, .window-game, .window-question-filter {
-    background-color: rgb(22, 26, 30);
+@import url("./colors.css");
+.window_main,
+.window_extend,
+.window-game-history,
+.window-note,
+.window-game,
+.window-question-filter {
+    background-color: @bg-color;
 }
 
 .button {
-    background: rgb(22, 26, 30);
-    border: rgb(14, 203, 129) 1px solid;
-    color:rgb(14, 203, 129);
+    background: @bg-color;
+    border: @green-color 1px solid;
+    color: @green-color;
     font-weight: 600;
 }
 
 .button:hover {
-    background: rgb(14, 203, 129);
-    color: rgb(255, 255, 255);
+    background: @green-color;
+    color: @white-color;
 }
 
 .history-title {
     font-size: 1.5em;
     font-weight: 600;
-    color: rgb(255, 255, 255);
+    color: @white-color;
     margin-bottom: 0.5em;
 }
 
- .search-text text, .game-history-text text, .note-text text{
-    background: rgb(22, 26, 30);
-    color: rgb(255, 255, 255);
+.search-text text,
+.game-history-text text,
+.note-text text {
+    background: @bg-color;
+    color: @white-color;
     font-weight: 600;
 }
 
-.scroll-window, .scroll-window-game {
+.scroll-window,
+.scroll-window-game {
     border: none;
 }
 
 .history-text text {
-    background: rgb(22, 26, 30);
-    color: rgb(255, 255, 255);
+    background: @bg-color;
+    color: @white-color;
     font-weight: 600;
-    border: rgb(14, 203, 129) 1px solid;
+    border: @green-color 1px solid;
 }
+
 .input {
-    background: rgb(22, 26, 30);
-    color: rgb(255, 255, 255);
-    border: rgb(14, 203, 129) 1px solid;
+    background: @bg-color;
+    color: @white-color;
+    border: @green-color 1px solid;
     font-weight: 500;
 }
 
@@ -48,40 +58,51 @@
     font-size: 12px;
 }
 
-.extend-label, .game-history-label {
+.extend-label,
+.game-history-label {
     font-size: 0.8em;
-    color: rgb(255, 255, 255);
+    color: @white-color;
     font-weight: 600;
 }
 
-.game-title, .filter-title {
-    color: rgb(255, 255, 255);
+.game-title,
+.filter-title {
+    color: @white-color;
 }
 
-.game-des, .filter-des, .filter-option {
-    color: rgb(132, 142, 156);
+.game-des,
+.filter-des,
+.filter-option {
+    color: @des-color;
 }
 
-.eng, .query-result {
-    color: rgb(240, 185, 11);
+.query-result {
+    color: @yellow-color;
 }
 
-.vie text  {
-    background: rgb(22, 26, 30);
-    color: rgb(255, 255, 255);
-    border: rgb(255, 255, 255) 1px solid;
+.eng {
+    background-color: @purple-color;
+    color: @white-color;
+    border-radius: 10px;
+}
+
+.vie text {
+    background: @bg-color;
+    color: @white-color;
+    border: @white-color 1px solid;
     font-weight: 600;
     font-size: 18px;
 }
 
+
 .filter-option:checked {
-    color: rgb(240, 185, 11);
+    color: @purple-color;
 }
 
 .question-num {
-    color: rgb(246, 70, 93);
+    color: @red-color;
 }
 
 .correct-num {
-    color : rgb(14, 203, 129);
+    color: @green-color;
 }
