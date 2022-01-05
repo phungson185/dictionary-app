@@ -1,0 +1,108 @@
+@import url("./colors.css");
+.window_main,
+.window_extend,
+.window-game-history,
+.window-note,
+.window-game,
+.window-question-filter {
+    background-color: @bg-color;
+}
+
+.button {
+    background: @bg-color;
+    border: @green-color 1px solid;
+    color: @green-color;
+    font-weight: 600;
+}
+
+.button:hover {
+    background: @green-color;
+    color: @white-color;
+}
+
+.history-title {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: @white-color;
+    margin-bottom: 0.5em;
+}
+
+.search-text text,
+.game-history-text text,
+.note-text text {
+    background: @bg-color;
+    color: @white-color;
+    font-weight: 600;
+}
+
+.scroll-window,
+.scroll-window-game {
+    border: none;
+}
+
+.history-text text {
+    background: @bg-color;
+    color: @white-color;
+    font-weight: 600;
+    border: @green-color 1px solid;
+}
+
+.input {
+    background: @bg-color;
+    color: @white-color;
+    border: @green-color 1px solid;
+    font-weight: 500;
+}
+
+.icon-main {
+    font-size: 12px;
+}
+
+.extend-label,
+.game-history-label {
+    font-size: 0.8em;
+    color: @white-color;
+    font-weight: 600;
+}
+
+.game-title,
+.filter-title {
+    color: @white-color;
+}
+
+.game-des,
+.filter-des,
+.filter-option {
+    color: @des-color;
+}
+
+.query-result {
+    color: @yellow-color;
+}
+
+.eng {
+    background-color: @purple-color;
+    color: @white-color;
+    border-radius: 10px;
+}
+
+.vie text {
+    background: @bg-color;
+    color: @white-color;
+    border: @white-color 1px solid;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+
+.filter-option:checked {
+    color: @purple-color;
+}
+
+.question-num {
+    color: @red-color;
+}
+
+.correct-num {
+    color: @green-color;
+}
