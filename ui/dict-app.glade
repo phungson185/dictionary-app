@@ -1009,7 +1009,7 @@ Phùng Đình Sơn		20184189
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="practice" swapped="no"/>
+            <signal name="clicked" handler="note_list" swapped="no"/>
             <style>
               <class name="button"/>
             </style>

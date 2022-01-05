@@ -302,7 +302,7 @@ Phùng Đình Sơn		20184189
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">cau hoi</property>
             <property name="justify">center</property>
-            <property name="xalign">0.47999998927116394</property>
+            <property name="xalign">0.5</property>
             <attributes>
               <attribute name="font-desc" value="Sarai Bold 30"/>
             </attributes>
