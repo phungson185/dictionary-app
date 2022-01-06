@@ -24,6 +24,8 @@ int main(int argc, char *argv[])
 
     textview1 = GTK_WIDGET(gtk_builder_get_object(builder, "textview1"));
     textview_his = GTK_WIDGET(gtk_builder_get_object(builder, "textview_his"));
+    combo = GTK_WIDGET(gtk_builder_get_object(builder, "combo"));
+    gtk_widget_set_sensitive(combo, FALSE);
 
     provider = gtk_css_provider_new();
     display = gdk_display_get_default();
@@ -128,10 +130,57 @@ void translate()
             search_history_handler(gettext);
         }
     }
+    search_result = NULL;
 
-    set_mean_textview_text(textview_his, his);
+    split_result(strdup(value));
 
     free(value);
+}
+
+void split_result(char *s)
+{
+    search_result = make_jrb();
+
+    char *ptr;
+    char *op;
+    for (int i = 0; i < 21; i++)
+    {
+        char *str = strdup(s);
+        if ((ptr = strstr(str, word_type[i])) != NULL)
+        {
+            op = strsep(&ptr, "\n");
+
+            if (strchr(ptr, '*') != NULL)
+                jrb_insert_str(search_result, strdup(op), new_jval_s(strdup(strsep(&ptr, "*"))));
+            else if (strchr(ptr, '@') != NULL)
+                jrb_insert_str(search_result, strdup(op), new_jval_s(strdup(strsep(&ptr, "@"))));
+            else
+                jrb_insert_str(search_result, strdup(op), new_jval_s(strdup(strsep(&ptr, "\0"))));
+
+        }
+    }
+
+    gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(combo));
+
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, "Tất cả");
+    JRB p;
+    jrb_traverse(p, search_result)
+    {
+        gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, jval_s(p->key));
+    }
+    gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
+    gtk_widget_set_sensitive(combo, TRUE);
+
+}
+
+void selectt()
+{
+    gchar test[100];
+    strcpy(test, gtk_combo_box_text_get_active_text(combo));
+    puts(test);
+    JRB ptr = jrb_find_str(search_result, test);
+    if (ptr != NULL)
+        set_mean_textview_text(textview1, jval_s(ptr->val));
 }
 
 void clear_history()
