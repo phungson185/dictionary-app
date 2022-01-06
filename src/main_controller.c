@@ -25,7 +25,6 @@ int main(int argc, char *argv[])
     textview1 = GTK_WIDGET(gtk_builder_get_object(builder, "textview1"));
     textview_his = GTK_WIDGET(gtk_builder_get_object(builder, "textview_his"));
     combo = GTK_WIDGET(gtk_builder_get_object(builder, "combo"));
-    gtk_widget_set_sensitive(combo, FALSE);
 
     provider = gtk_css_provider_new();
     display = gdk_display_get_default();
@@ -46,6 +45,15 @@ int main(int argc, char *argv[])
     list = gtk_list_store_new(1, G_TYPE_STRING);
     gtk_entry_completion_set_model(comple, GTK_TREE_MODEL(list));
     gtk_entry_set_completion(GTK_ENTRY(searchentry), comple);
+
+    store = gtk_list_store_new(1, G_TYPE_STRING);
+    gtk_combo_box_set_model(GTK_COMBO_BOX(combo), GTK_TREE_MODEL(store));
+
+    renderer = gtk_cell_renderer_text_new();
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, TRUE);
+    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo), renderer, "text", 0, NULL);
+
+    gtk_widget_set_sensitive(combo, FALSE);
 
     g_signal_connect(searchentry, "key_press_event", G_CALLBACK(on_key_press), NULL);
     g_signal_connect(window_main, "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -111,7 +119,6 @@ void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 
 void translate()
 {
-    char *value = (char *)malloc(sizeof(char) * MAX);
     btpos(dict, ZSTART);
     int rsize;
     gchar gettext[MAX];
@@ -122,28 +129,39 @@ void translate()
     }
     else
     {
-        if (btsel(dict, gettext, value, MAX, &rsize))
+        if (btsel(dict, gettext, translate_value, MAX, &rsize))
             show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Không tìm thấy từ bạn cần tìm");
         else
         {
-            set_mean_textview_text(textview1, value);
+            set_mean_textview_text(textview1, translate_value);
             search_history_handler(gettext);
         }
     }
     search_result = NULL;
+    gtk_widget_set_sensitive(combo, TRUE);
 
-    split_result(strdup(value));
+    split_result(strdup(translate_value));
+}
 
-    free(value);
+Option *make_option(char *eng, char *vie)
+{
+    Option *option = (Option *)malloc(sizeof(Option));
+    option->option = strdup(eng);
+    option->mean = strdup(vie);
+    return option;
 }
 
 void split_result(char *s)
 {
     search_result = make_jrb();
+    gtk_list_store_clear(store);
+    gtk_list_store_append(store, &iter);
+    gtk_list_store_set(store, &iter, 0, "Tất cả", -1);
 
     char *ptr;
     char *op;
-    for (int i = 0; i < 21; i++)
+    int count = 1;
+    for (int i = 0; i < 26; i++)
     {
         char *str = strdup(s);
         if ((ptr = strstr(str, word_type[i])) != NULL)
@@ -151,36 +169,40 @@ void split_result(char *s)
             op = strsep(&ptr, "\n");
 
             if (strchr(ptr, '*') != NULL)
-                jrb_insert_str(search_result, strdup(op), new_jval_s(strdup(strsep(&ptr, "*"))));
+            {
+                gtk_list_store_append(store, &iter);
+                gtk_list_store_set(store, &iter, 0, op, -1);
+                jrb_insert_int(search_result, count++, (Jval){.v = make_option(op, strsep(&ptr, "*"))});
+            }
             else if (strchr(ptr, '@') != NULL)
-                jrb_insert_str(search_result, strdup(op), new_jval_s(strdup(strsep(&ptr, "@"))));
+            {
+                gtk_list_store_append(store, &iter);
+                gtk_list_store_set(store, &iter, 0, op, -1);
+                jrb_insert_int(search_result, count++, (Jval){.v = make_option(op, strsep(&ptr, "@"))});
+            }
             else
-                jrb_insert_str(search_result, strdup(op), new_jval_s(strdup(strsep(&ptr, "\0"))));
-
+            {
+                gtk_list_store_append(store, &iter);
+                gtk_list_store_set(store, &iter, 0, op, -1);
+                jrb_insert_int(search_result, count++, (Jval){.v = make_option(op, strsep(&ptr, "\0"))});
+            }
         }
     }
-
-    gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(combo));
-
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, "Tất cả");
-    JRB p;
-    jrb_traverse(p, search_result)
-    {
-        gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), NULL, jval_s(p->key));
-    }
     gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
-    gtk_widget_set_sensitive(combo, TRUE);
-
 }
 
-void selectt()
+void on_combo_changed()
 {
-    gchar test[100];
-    strcpy(test, gtk_combo_box_text_get_active_text(combo));
-    puts(test);
-    JRB ptr = jrb_find_str(search_result, test);
-    if (ptr != NULL)
-        set_mean_textview_text(textview1, jval_s(ptr->val));
+
+    int id = gtk_combo_box_get_active(GTK_COMBO_BOX(combo));
+
+    if (!id)
+        set_mean_textview_text(textview1, translate_value);
+    else if (id > 0)
+    {
+        Option *o = (Option *)(jrb_find_int(search_result, id)->val.v);
+        set_mean_textview_text(textview1, o->mean);
+    }
 }
 
 void clear_history()

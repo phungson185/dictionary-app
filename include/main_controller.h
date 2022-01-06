@@ -14,13 +14,19 @@
 
 #define MAX 10000
 
+typedef struct {
+    char *option;
+    char *mean;
+} Option;
+
 GtkBuilder *builder;
 GtkWidget *window_main, *textview1, *textview_his, *combo;
 GtkEntryCompletion *comple;
-GtkListStore *list;
-GtkTreeIter Iter;
+GtkListStore *list, *store;
+GtkTreeIter Iter, iter;
 GtkEntry *searchentry;
 GtkCssProvider *provider;
+GtkCellRenderer *renderer;
 
 GdkDisplay *display;
 GdkScreen *screen;
@@ -44,8 +50,8 @@ char game_history_path[100];
 
 char buftrans[MAX];
 char his[MAX];
-
-static char word_type[21][50] = {
+char translate_value[MAX];
+static char word_type[26][50] = {
     "danh từ\n",
     "động từ\n",
     "tính từ\n",
@@ -56,16 +62,20 @@ static char word_type[21][50] = {
     "thán từ\n",
     "nội động từ\n",
     "ngoại động từ\n",
-    "Lĩnh vực: ô tô\n",
-    "Lĩnh vực: giao thông & vận tải\n",
-    "Lĩnh vực: đo lường & điều khiển\n",
-    "Lĩnh vực: vật lý\n",
-    "Lĩnh vực: dệt may\n",
-    "Lĩnh vực: môi trường\n",
-    "Lĩnh vực: cơ khí & công trình\n",
-    "Lĩnh vực: xây dựng\n",
     "Lĩnh vực: y học\n",
+    "Lĩnh vực: toán & tin\n",
+    "Lĩnh vực: điện tử & viễn thông\n",
+    "Lĩnh vực: xây dựng\n",
+    "Lĩnh vực: điện lạnh\n",
+    "Lĩnh vực: hóa học & vật liệu\n",
+    "Lĩnh vực: điện\n",
+    "Lĩnh vực: cơ khí & công trình\n",
+    "Lĩnh vực: ô tô\n",
+    "Lĩnh vực: dệt may\n",
     "Lĩnh vực: thực phẩm\n",
+    "Lĩnh vực: môi trường\n",
+    "Lĩnh vực: vật lý\n",
+    "Lĩnh vực: giao thông & vận tải\n",
     "Chuyên ngành kỹ thuật\n",
     "Chuyên ngành kinh tế\n"
 };
@@ -73,7 +83,7 @@ static char word_type[21][50] = {
 void on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data);
 void translate();
 void split_result(char *s);
-void selectt();
+void on_combo_changed();
 void clear_history();
 void add_to_note();
 void delete_from_note();
