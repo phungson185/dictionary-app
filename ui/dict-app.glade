@@ -902,36 +902,6 @@ Phùng Đình Sơn		20184189
           </packing>
         </child>
         <child>
-          <object class="GtkScrolledWindow">
-            <property name="width_request">730</property>
-            <property name="height_request">279</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="shadow_type">in</property>
-            <child>
-              <object class="GtkTextView" id="textview1">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="editable">False</property>
-                <property name="wrap_mode">word</property>
-                <property name="left_margin">7</property>
-                <property name="top_margin">3</property>
-                <property name="monospace">True</property>
-                <style>
-                  <class name="search-text"/>
-                </style>
-              </object>
-            </child>
-            <style>
-              <class name="scroll-window"/>
-            </style>
-          </object>
-          <packing>
-            <property name="x">223</property>
-            <property name="y">79</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkImage">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
@@ -1031,6 +1001,50 @@ Phùng Đình Sơn		20184189
             <property name="y">132</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="width_request">730</property>
+            <property name="height_request">279</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="shadow_type">in</property>
+            <child>
+              <object class="GtkTextView" id="textview1">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="editable">False</property>
+                <property name="wrap_mode">word</property>
+                <property name="left_margin">7</property>
+                <property name="top_margin">3</property>
+                <property name="monospace">True</property>
+                <style>
+                  <class name="search-text"/>
+                </style>
+              </object>
+            </child>
+            <style>
+              <class name="scroll-window"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">223</property>
+            <property name="y">79</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkComboBox" id="combo">
+            <property name="width_request">243</property>
+            <property name="height_request">40</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="button_sensitivity">on</property>
+            <signal name="changed" handler="on_combo_changed" swapped="no"/>
+          </object>
+          <packing>
+            <property name="x">710</property>
+            <property name="y">79</property>
+          </packing>
+        </child>
       </object>
     </child>
     <style>
@@ -1122,8 +1136,8 @@ Phùng Đình Sơn		20184189
     </style>
   </object>
   <object class="GtkWindow" id="window_question_filter">
-    <property name="width_request">698</property>
-    <property name="height_request">335</property>
+    <property name="width_request">801</property>
+    <property name="height_request">484</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Bộ lọc câu hỏi</property>
     <child type="titlebar">
@@ -1372,7 +1386,7 @@ Phùng Đình Sơn		20184189
             </style>
           </object>
           <packing>
-            <property name="x">561</property>
+            <property name="x">559</property>
             <property name="y">90</property>
           </packing>
         </child>
@@ -1388,7 +1402,7 @@ Phùng Đình Sơn		20184189
             </style>
           </object>
           <packing>
-            <property name="x">561</property>
+            <property name="x">563</property>
             <property name="y">118</property>
           </packing>
         </child>
@@ -1402,8 +1416,8 @@ Phùng Đình Sơn		20184189
             </style>
           </object>
           <packing>
-            <property name="x">288</property>
-            <property name="y">254</property>
+            <property name="x">560</property>
+            <property name="y">309</property>
           </packing>
         </child>
         <child>
@@ -1417,8 +1431,8 @@ Phùng Đình Sơn		20184189
             <property name="input_purpose">number</property>
           </object>
           <packing>
-            <property name="x">288</property>
-            <property name="y">276</property>
+            <property name="x">559</property>
+            <property name="y">335</property>
           </packing>
         </child>
         <child>
@@ -1434,8 +1448,8 @@ Phùng Đình Sơn		20184189
             </style>
           </object>
           <packing>
-            <property name="x">578</property>
-            <property name="y">276</property>
+            <property name="x">560</property>
+            <property name="y">415</property>
           </packing>
         </child>
         <child>
@@ -1446,8 +1460,8 @@ Phùng Đình Sơn		20184189
             <property name="icon_size">3</property>
           </object>
           <packing>
-            <property name="x">651</property>
-            <property name="y">281</property>
+            <property name="x">637</property>
+            <property name="y">421</property>
           </packing>
         </child>
         <child>
@@ -1463,7 +1477,7 @@ Phùng Đình Sơn		20184189
             </style>
           </object>
           <packing>
-            <property name="x">505</property>
+            <property name="x">559</property>
             <property name="y">17</property>
           </packing>
         </child>
@@ -1480,13 +1494,13 @@ Phùng Đình Sơn		20184189
             </style>
           </object>
           <packing>
-            <property name="x">287</property>
-            <property name="y">191</property>
+            <property name="x">559</property>
+            <property name="y">186</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="query_result">
-            <property name="width_request">270</property>
+            <property name="width_request">214</property>
             <property name="height_request">33</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
@@ -1496,8 +1510,8 @@ Phùng Đình Sơn		20184189
             </style>
           </object>
           <packing>
-            <property name="x">413</property>
-            <property name="y">191</property>
+            <property name="x">559</property>
+            <property name="y">236</property>
           </packing>
         </child>
         <child>
@@ -1508,8 +1522,8 @@ Phùng Đình Sơn		20184189
             <property name="icon_size">3</property>
           </object>
           <packing>
-            <property name="x">292</property>
-            <property name="y">197</property>
+            <property name="x">564</property>
+            <property name="y">192</property>
           </packing>
         </child>
         <child>
@@ -1520,8 +1534,281 @@ Phùng Đình Sơn		20184189
             <property name="icon_size">3</property>
           </object>
           <packing>
-            <property name="x">517</property>
+            <property name="x">569</property>
             <property name="y">23</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lv_oto">
+            <property name="label" translatable="yes">Ô tô</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">11</property>
+            <property name="y">310</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lv_detmay">
+            <property name="label" translatable="yes">Dệt may</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">11</property>
+            <property name="y">334</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lv_thucpham">
+            <property name="label" translatable="yes">Thực phẩm</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">11</property>
+            <property name="y">358</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lv_vatly">
+            <property name="label" translatable="yes">Vật lý</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">11</property>
+            <property name="y">406</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lv_moitruong">
+            <property name="label" translatable="yes">Môi trường</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">11</property>
+            <property name="y">382</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lv_gtvt">
+            <property name="label" translatable="yes">Giao thông vận tải</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">11</property>
+            <property name="y">430</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Loại từ</property>
+            <attributes>
+              <attribute name="font-desc" value="Sans Bold 12"/>
+            </attributes>
+            <style>
+              <class name="filter-title"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">287</property>
+            <property name="y">186</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lt_danhtu">
+            <property name="label" translatable="yes">Danh từ</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">287</property>
+            <property name="y">214</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lt_dongtu">
+            <property name="label" translatable="yes">Động từ</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">287</property>
+            <property name="y">238</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lt_tinhtu">
+            <property name="label" translatable="yes">Tính từ</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">287</property>
+            <property name="y">262</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lt_trangtu">
+            <property name="label" translatable="yes">Trạng từ</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">287</property>
+            <property name="y">286</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lt_daitu">
+            <property name="label" translatable="yes">Đại từ</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">287</property>
+            <property name="y">310</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lt_thantu">
+            <property name="label" translatable="yes">Thán từ</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">287</property>
+            <property name="y">334</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lt_noidongtu">
+            <property name="label" translatable="yes">Nội động từ</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">287</property>
+            <property name="y">406</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lt_ngoaidongtu">
+            <property name="label" translatable="yes">Ngoại động từ</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">287</property>
+            <property name="y">430</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lt_gioitu">
+            <property name="label" translatable="yes">Giới từ</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">287</property>
+            <property name="y">358</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="lt_lientu">
+            <property name="label" translatable="yes">Liên từ</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <style>
+              <class name="filter-option"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">287</property>
+            <property name="y">382</property>
           </packing>
         </child>
       </object>

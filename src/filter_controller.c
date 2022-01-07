@@ -48,11 +48,9 @@ void insert_game_tree(BTA *source, char filter[][50])
 {
     long i = 0;
     char *start;
-    char *end;
-    char *target;
+    char *op;
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
-    char *lv = (char *)malloc(sizeof(char) * MAX);
     char *mean = (char *)malloc(sizeof(char) * MAX);
 
     int rsize, check_lv = 0;
@@ -67,23 +65,42 @@ void insert_game_tree(BTA *source, char filter[][50])
         {
             if (strlen(filter[j]) > 0)
             {
-                strcpy(lv, filter[j]);
-                if (start = strstr(vie, lv))
+                if (start = strstr(vie, filter[j]))
                 {
                     check_lv++;
 
-                    if (start = strtok(start, "@"))
+                    strsep(&start, "\n");
+                    if (strchr(start, '*') != NULL)
                     {
-                        strcat(mean, "@");
-                        strcat(mean, start);
+                        strcat(mean, filter[j]);
+                        strcat(mean, strsep(&start, "*"));
                         strcat(mean, "\n");
                     }
-                    else if (start = strtok(0, "\n"))
+                    else if (strchr(start, '@') != NULL)
                     {
-                        strcat(mean, "@");
-                        strcat(mean, start);
+                        strcat(mean, filter[j]);
+                        strcat(mean, strsep(&start, "@"));
                         strcat(mean, "\n");
                     }
+                    else
+                    {
+                        strcat(mean, filter[j]);
+                        strcat(mean, strsep(&start, "\0"));
+                        strcat(mean, "\n");
+                    }
+
+                    // if (start = strtok(start, "@"))
+                    // {
+                    //     strcat(mean, "@");
+                    //     strcat(mean, start);
+                    //     strcat(mean, "\n");
+                    // }
+                    // else if (start = strtok(0, "\n"))
+                    // {
+                    //     strcat(mean, "@");
+                    //     strcat(mean, start);
+                    //     strcat(mean, "\n");
+                    // }
                 }
             }
         }
@@ -112,44 +129,45 @@ void query()
     lv_num = 0;
     memset(filter, '\0', sizeof(filter));
 
+    int index_filter = 0;
     if (y_hoc)
     {
-        strcpy(filter[0], "@Lĩnh vực: y học\n");
+        strcpy(filter[index_filter++], "@Lĩnh vực: y học\n");
         lv_num++;
     }
     if (toan_tin)
     {
-        strcpy(filter[1], "@Lĩnh vực: toán & tin\n");
+        strcpy(filter[index_filter++], "@Lĩnh vực: toán & tin\n");
         lv_num++;
     }
     if (dtvt)
     {
-        strcpy(filter[2], "@Lĩnh vực: điện tử & viễn thông\n");
+        strcpy(filter[index_filter++], "@Lĩnh vực: điện tử & viễn thông\n");
         lv_num++;
     }
     if (xay_dung)
     {
-        strcpy(filter[3], "@Lĩnh vực: xây dựng\n");
+        strcpy(filter[index_filter++], "@Lĩnh vực: xây dựng\n");
         lv_num++;
     }
     if (dien_lanh)
     {
-        strcpy(filter[4], "@Lĩnh vực: điện lạnh\n");
+        strcpy(filter[index_filter++], "@Lĩnh vực: điện lạnh\n");
         lv_num++;
     }
     if (hh_vat_lieu)
     {
-        strcpy(filter[5], "@Lĩnh vực: hóa học & vật liệu\n");
+        strcpy(filter[index_filter++], "@Lĩnh vực: hóa học & vật liệu\n");
         lv_num++;
     }
     if (dien)
     {
-        strcpy(filter[6], "@Lĩnh vực: điện\n");
+        strcpy(filter[index_filter++], "@Lĩnh vực: điện\n");
         lv_num++;
     }
     if (ckct)
     {
-        strcpy(filter[7], "@Lĩnh vực: cơ khí & công trình\n");
+        strcpy(filter[index_filter++], "@Lĩnh vực: cơ khí & công trình\n");
         lv_num++;
     }
     if (ky_thuat)
@@ -159,7 +177,7 @@ void query()
     }
     if (kinh_te)
     {
-        strcpy(filter[9], "@Chuyên ngành kinh tế\n");
+        strcpy(filter[index_filter++], "@Chuyên ngành kinh tế\n");
         lv_num++;
     }
     if (filter_ghi_chu)
