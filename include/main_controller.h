@@ -14,7 +14,8 @@
 
 #define MAX 10000
 
-typedef struct {
+typedef struct
+{
     char *option;
     char *mean;
 } Option;
@@ -41,12 +42,12 @@ BTA *dict;
 BTA *note;
 JRB search_result;
 
-char dict_path[100];
-char note_path[100];
-char ui_path[100];
-char history_path[100];
-char question_path[100];
-char game_history_path[100];
+static char dict_path[50] = "../db/AnhViet.dat";
+static char note_path[50] = "../db/note.bt";
+static char ui_path[50] = "../ui/dict-app.glade";
+static char history_path[50] = "../db/history.txt";
+static char question_path[50] = "../db/question.bt";
+static char game_history_path[50] = "../db/game_history.txt";
 
 char buftrans[MAX];
 char his[MAX];
@@ -73,7 +74,7 @@ static char word_type[26][50] = {
     "Lĩnh vực: ô tô\n",
     "Lĩnh vực: dệt may\n",
     "Lĩnh vực: thực phẩm\n",
-    "Lĩnh vực: môi trường\n",
+    "Lĩnh vực: môi trường\n", 
     "Lĩnh vực: vật lý\n",
     "Lĩnh vực: giao thông & vận tải\n",
     "Chuyên ngành kỹ thuật\n",

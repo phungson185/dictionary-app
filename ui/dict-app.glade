@@ -753,8 +753,8 @@ Phùng Đình Sơn		20184189
             <property name="receives_default">True</property>
             <property name="always_show_image">True</property>
             <signal name="clicked" handler="translate" swapped="no"/>
-            <accelerator key="Return" signal="clicked"/>
             <accelerator key="Return" signal="activate"/>
+            <accelerator key="Return" signal="clicked"/>
             <style>
               <class name="button"/>
             </style>
@@ -1638,7 +1638,7 @@ Phùng Đình Sơn		20184189
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Loại từ</property>
+            <property name="label" translatable="yes">Từ loại</property>
             <attributes>
               <attribute name="font-desc" value="Sans Bold 12"/>
             </attributes>
