@@ -15,9 +15,10 @@
 BTA *question_tree;
 
 GtkWidget *window_question_filter, *window_game_history, *textview5, *question_num, *query_result, *btn_start;
-GtkWidget *lv_y_hoc, *lv_toan_tin, *lv_dtvt, *lv_xay_dung, *lv_dien_lanh, *lv_hh_vat_lieu, *lv_dien, *lv_ckct, *cn_kinh_te, *cn_ky_thuat, *tu_ghi_chu;
-
-int y_hoc, toan_tin, dtvt, xay_dung, dien_lanh, hh_vat_lieu, dien, ckct;
+GtkWidget *lv_y_hoc, *lv_toan_tin, *lv_dtvt, *lv_xay_dung, *lv_dien_lanh, *lv_hh_vat_lieu, *lv_dien, *lv_ckct,*lv_oto, *lv_detmay, *lv_thucpham, *lv_vatly, *lv_moitruong, *lv_gtvt, *cn_kinh_te, *cn_ky_thuat, *tu_ghi_chu;
+GtkWidget *lt_danhtu, *lt_dongtu, *lt_tinhtu, *lt_trangtu, *lt_daitu, *lt_thantu, *lt_noidongtu, *lt_ngoaidongtu, *lt_gioitu, *lt_lientu;
+int y_hoc, toan_tin, dtvt, xay_dung, dien_lanh, hh_vat_lieu, dien, ckct, oto, detmay, thucpham, vatly, moitruong, gtvt;
+int danhtu, dongtu, tinhtu, trangtu, daitu, thantu, noidongtu, ngoaidongtu, gioitu, lientu;
 int kinh_te, ky_thuat, filter_ghi_chu;
 
 long game_tree_size, lv_num;

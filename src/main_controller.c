@@ -6,13 +6,6 @@ int main(int argc, char *argv[])
     gdk_color_parse("#f6465d", &red);
     gdk_color_parse("#0ecb81", &green);
 
-    strcpy(dict_path, "../db/AnhViet.dat");
-    strcpy(note_path, "../db/note.bt");
-    strcpy(ui_path, "../ui/dict-app.glade");
-    strcpy(history_path, "../db/history.txt");
-    strcpy(question_path, "../db/question.bt");
-    strcpy(game_history_path, "../db/game_history.txt");
-
     gtk_init(&argc, &argv);
 
     builder = gtk_builder_new_from_file(ui_path);
@@ -53,7 +46,7 @@ int main(int argc, char *argv[])
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, TRUE);
     gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo), renderer, "text", 0, NULL);
 
-    gtk_widget_set_sensitive(combo, FALSE);
+    gtk_widget_set_visible(combo, FALSE);
 
     g_signal_connect(searchentry, "key_press_event", G_CALLBACK(on_key_press), NULL);
     g_signal_connect(window_main, "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -138,7 +131,7 @@ void translate()
         }
     }
     search_result = NULL;
-    gtk_widget_set_sensitive(combo, TRUE);
+    gtk_widget_set_visible(combo, TRUE);
 
     split_result(strdup(translate_value));
 }
