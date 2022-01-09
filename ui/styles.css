@@ -1,37 +1,29 @@
-@import url("./colors.css");
 .window_main,
 .window_extend,
 .window-game-history,
 .window-note,
 .window-game,
 .window-question-filter {
-    background-color: @bg-color;
+    background-color: #ffffff;
 }
 
-.button {
-    background: @bg-color;
-    border: @green-color 1px solid;
-    color: @green-color;
-    font-weight: 600;
+.button, .combo {
+    background: #fafafa ;
+    border: #248ad8 1px solid;
+    color: #2f2f2f;
+    font-weight: 500;
 }
 
-.button:hover {
-    background: @green-color;
-    color: @white-color;
-}
-
-.history-title {
-    font-size: 1.5em;
-    font-weight: 600;
-    color: @white-color;
-    margin-bottom: 0.5em;
+.button:hover, .combo:hover {
+    background: #d8e6f1;
+    border: #248ad8 1px solid;
 }
 
 .search-text text,
 .game-history-text text,
 .note-text text {
-    background: @bg-color;
-    color: @white-color;
+    background: #fafafa;
+    color: #2f2f2f;
     font-weight: 600;
 }
 
@@ -41,16 +33,16 @@
 }
 
 .history-text text {
-    background: @bg-color;
-    color: @white-color;
+    background: #fafafa;
+    color: #2f2f2f;
     font-weight: 600;
-    border: @green-color 1px solid;
+    border: #248ad8 1px solid;
 }
 
 .input {
-    background: @bg-color;
-    color: @white-color;
-    border: @green-color 1px solid;
+    border: #248ad8 1px solid;
+    background: #fafafa;
+    color: #2f2f2f;
     font-weight: 500;
 }
 
@@ -61,48 +53,46 @@
 .extend-label,
 .game-history-label {
     font-size: 0.8em;
-    color: @white-color;
+    color: #2f2f2f;
     font-weight: 600;
 }
 
 .game-title,
 .filter-title {
-    color: @white-color;
+    color: #248ad8;
 }
 
 .game-des,
 .filter-des,
 .filter-option {
-    color: @des-color;
+    color: #2f2f2f;
 }
 
 .query-result {
-    color: @yellow-color;
+    color: rgb(246, 70, 93);
 }
 
 .eng {
-    background-color: @purple-color;
-    color: @white-color;
+    background: #d8e6f1;
+    border: #248ad8 1px solid;
     border-radius: 10px;
 }
 
 .vie text {
-    background: @bg-color;
-    color: @white-color;
-    border: @white-color 1px solid;
-    font-weight: 600;
-    font-size: 18px;
+    background: #fafafa;
+    color: #2f2f2f;
+    border: #248ad8 1px solid;
 }
 
 
 .filter-option:checked {
-    color: @purple-color;
+    color: #924d8b;
 }
 
 .question-num {
-    color: @red-color;
+    color: #248ad8;
 }
 
 .correct-num {
-    color: @green-color;
+    color: rgb(14, 203, 129);
 }
