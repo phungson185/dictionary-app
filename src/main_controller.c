@@ -130,6 +130,8 @@ void translate()
             search_history_handler(gettext);
         }
     }
+    set_mean_textview_text(textview_his, his);
+    
     search_result = NULL;
     gtk_widget_set_visible(combo, TRUE);
 
