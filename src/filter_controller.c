@@ -99,7 +99,8 @@ void insert_game_tree(BTA *source, char filter[][50])
         {
             if (strlen(filter[j]) > 0)
             {
-                if (start = strstr(vie, filter[j]))
+                char *str = strdup(vie);
+                if (start = strstr(str, filter[j]))
                 {
                     check_lv++;
 
@@ -149,7 +150,7 @@ void query()
     question_tree = btcrt(question_path, 0, 0);
     note = btopn(note_path, 0, 0);
 
-    char filter[27][50];
+    char filter[26][50];
     lv_num = 0;
     memset(filter, '\0', sizeof(filter));
 
@@ -224,7 +225,6 @@ void query()
         strcpy(filter[index_filter++], "@Lĩnh vực: giao thông & vận tải\n");
         lv_num++;
     }
-
     if (danhtu)
     {
         strcpy(filter[index_filter++], "danh từ\n");
@@ -277,7 +277,7 @@ void query()
     }
     if (ky_thuat)
     {
-        strcpy(filter[8], "@Chuyên ngành kỹ thuật\n");
+        strcpy(filter[index_filter++], "@Chuyên ngành kỹ thuật\n");
         lv_num++;
     }
     if (kinh_te)
