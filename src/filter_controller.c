@@ -85,7 +85,7 @@ void insert_game_tree(BTA *source, char filter[][50])
     long i = 0;
     char *start;
     char *op;
-    char *p;
+    char *p, *ptr;
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
     char *mean = (char *)malloc(sizeof(char) * MAX);
@@ -103,26 +103,40 @@ void insert_game_tree(BTA *source, char filter[][50])
                 char *str = strdup(vie);
                 if (start = strstr(str, filter[j]))
                 {
-                    check_lv++;
 
                     strsep(&start, "\n");
                     if (strchr(start, '*') != NULL)
                     {
-                        strcat(mean, filter[j]);
-                        strcat(mean, strsep(&start, "*"));
-                        strcat(mean, "\n");
+                        ptr = strsep(&start, "*");
+                        if (strlen(ptr) > 0)
+                        {
+                            strcat(mean, filter[j]);
+                            strcat(mean, ptr);
+                            strcat(mean, "\n");
+                            check_lv++;
+                        }
                     }
                     else if (strchr(start, '@') != NULL)
                     {
-                        strcat(mean, filter[j]);
-                        strcat(mean, strsep(&start, "@"));
-                        strcat(mean, "\n");
+                        ptr = strsep(&start, "@");
+                        if (strlen(ptr) > 0)
+                        {
+                            strcat(mean, filter[j]);
+                            strcat(mean, ptr);
+                            strcat(mean, "\n");
+                            check_lv++;
+                        }
                     }
                     else
                     {
-                        strcat(mean, filter[j]);
-                        strcat(mean, strsep(&start, "\0"));
-                        strcat(mean, "\n");
+                        ptr = strsep(&start, "\0");
+                        if (strlen(ptr) > 0)
+                        {
+                            strcat(mean, filter[j]);
+                            strcat(mean, ptr);
+                            strcat(mean, "\n");
+                            check_lv++;
+                        }
                     }
                 }
             }

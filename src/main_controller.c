@@ -131,7 +131,7 @@ void translate()
         }
     }
     set_mean_textview_text(textview_his, his);
-    
+
     search_result = NULL;
     gtk_widget_set_visible(combo, TRUE);
 
@@ -153,7 +153,7 @@ void split_result(char *s)
     gtk_list_store_append(store, &iter);
     gtk_list_store_set(store, &iter, 0, "Tất cả", -1);
 
-    char *ptr;
+    char *ptr, *p;
     char *op;
     int count = 1;
     for (int i = 0; i < 26; i++)
@@ -165,21 +165,33 @@ void split_result(char *s)
 
             if (strchr(ptr, '*') != NULL)
             {
-                gtk_list_store_append(store, &iter);
-                gtk_list_store_set(store, &iter, 0, op, -1);
-                jrb_insert_int(search_result, count++, (Jval){.v = make_option(op, strsep(&ptr, "*"))});
+                p = strsep(&ptr, "*");
+                if (strlen(p) > 0)
+                {
+                    gtk_list_store_append(store, &iter);
+                    gtk_list_store_set(store, &iter, 0, op, -1);
+                    jrb_insert_int(search_result, count++, (Jval){.v = make_option(op, p)});
+                }
             }
             else if (strchr(ptr, '@') != NULL)
             {
-                gtk_list_store_append(store, &iter);
-                gtk_list_store_set(store, &iter, 0, op, -1);
-                jrb_insert_int(search_result, count++, (Jval){.v = make_option(op, strsep(&ptr, "@"))});
+                p = strsep(&ptr, "@");
+                if (strlen(p) > 0)
+                {
+                    gtk_list_store_append(store, &iter);
+                    gtk_list_store_set(store, &iter, 0, op, -1);
+                    jrb_insert_int(search_result, count++, (Jval){.v = make_option(op, p)});
+                }
             }
             else
             {
-                gtk_list_store_append(store, &iter);
-                gtk_list_store_set(store, &iter, 0, op, -1);
-                jrb_insert_int(search_result, count++, (Jval){.v = make_option(op, strsep(&ptr, "\0"))});
+                p = strsep(&ptr, "\0");
+                if (strlen(p) > 0)
+                {
+                    gtk_list_store_append(store, &iter);
+                    gtk_list_store_set(store, &iter, 0, op, -1);
+                    jrb_insert_int(search_result, count++, (Jval){.v = make_option(op, p)});
+                }
             }
         }
     }
