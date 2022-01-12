@@ -4,7 +4,7 @@ void start()
 {
     num_of_ques = atoi(gtk_entry_get_text(GTK_ENTRY(question_num)));
 
-    if (num_of_ques > game_tree_size || !num_of_ques)
+    if (num_of_ques > game_tree_size || !num_of_ques || num_of_ques <= 0)
     {
         show_message(window_question_filter, GTK_MESSAGE_ERROR, "ERROR", "Số lượng câu hỏi không hợp lệ");
         return;

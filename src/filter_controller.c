@@ -132,8 +132,6 @@ void insert_game_tree(BTA *source, char filter[][50])
             i++;
             if (filter_ghi_chu && !strlen(filter[0]))
             {
-                printf("%ld-%s\n", strlen(eng), eng);
-
                 if (p = strstr(vie, eng))
                 {
                     strsep(&p, "\n");

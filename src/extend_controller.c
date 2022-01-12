@@ -80,6 +80,7 @@ void delete_from_dict()
 {
     char *value = (char *)malloc(sizeof(char) * MAX);
     int rsize;
+    note = btopn(note_path, 0, 0);
     gchar gettext[MAX];
     btpos(dict, ZSTART);
     strcpy(gettext, gtk_entry_get_text(GTK_ENTRY(entry_del)));
@@ -89,9 +90,10 @@ void delete_from_dict()
     {
         if (btsel(dict, gettext, value, MAX, &rsize))
             show_message(window_main, GTK_MESSAGE_ERROR, "ERROR!", "Không tìm thấy từ bạn cần xóa.");
-
         else
         {
+            if (!btsel(note, gettext, value, MAX, &rsize))
+                btdel(note, gettext);
             if (!btdel(dict, gettext))
                 show_message(window_main, GTK_MESSAGE_INFO, "SUCCESS!", "Đã xóa thành công.");
             else
@@ -99,4 +101,5 @@ void delete_from_dict()
         }
     }
     free(value);
+    btcls(note);
 }
