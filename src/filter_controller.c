@@ -85,6 +85,7 @@ void insert_game_tree(BTA *source, char filter[][50])
     long i = 0;
     char *start;
     char *op;
+    char *p;
     char *eng = (char *)malloc(sizeof(char) * MAX);
     char *vie = (char *)malloc(sizeof(char) * MAX);
     char *mean = (char *)malloc(sizeof(char) * MAX);
@@ -95,7 +96,7 @@ void insert_game_tree(BTA *source, char filter[][50])
     {
         strcpy(mean, "");
         check_lv = 0;
-        for (int j = 0; j < 27; j++)
+        for (int j = 0; j < 26; j++)
         {
             if (strlen(filter[j]) > 0)
             {
@@ -129,11 +130,27 @@ void insert_game_tree(BTA *source, char filter[][50])
         if ((strlen(mean) > 0 && check_lv == lv_num) || (filter_ghi_chu && !strlen(filter[0])))
         {
             i++;
-            strcat(eng, "^");
-            if(filter_ghi_chu && !strlen(filter[0]))
-                strcat(eng, vie);
-            else 
+            if (filter_ghi_chu && !strlen(filter[0]))
+            {
+                printf("%ld-%s\n", strlen(eng), eng);
+
+                if (p = strstr(vie, eng))
+                {
+                    strsep(&p, "\n");
+                    strcat(eng, "^");
+                    strcat(eng, p);
+                }
+                else
+                {
+                    strcat(eng, "^");
+                    strcat(eng, vie);
+                }
+            }
+            else
+            {
+                strcat(eng, "^");
                 strcat(eng, mean);
+            }
             btins(question_tree, make_long_to_string(i), eng, strlen(eng) + 1);
         }
     }
@@ -327,10 +344,10 @@ void show_game_his()
     GtkTextIter iter;
 
     buffer = clear_textview(textview5);
-    gtk_text_buffer_create_tag(buffer, "red_fg", "foreground", "red", NULL);
-    gtk_text_buffer_create_tag(buffer, "yellow_fg", "foreground", "yellow", NULL);
-    gtk_text_buffer_create_tag(buffer, "green_fg", "foreground", "green", NULL);
-    gtk_text_buffer_create_tag(buffer, "orange_fg", "foreground", "orange", NULL);
+    gtk_text_buffer_create_tag(buffer, "red_fg", "foreground", "#ff5c5c", NULL);
+    gtk_text_buffer_create_tag(buffer, "yellow_fg", "foreground", "#f8bb32", NULL);
+    gtk_text_buffer_create_tag(buffer, "green_fg", "foreground", "#40ad87", NULL);
+    gtk_text_buffer_create_tag(buffer, "greeen_fg", "foreground", "blue", NULL);
     gtk_text_buffer_get_iter_at_offset(buffer, &iter, 0);
 
     char *get_end_time;
@@ -375,15 +392,12 @@ void show_game_his()
         get_game_tree_size = strtok(NULL, "-");
         sprintf(line, "%-30s%-10s%-5s\n", get_end_time, get_correct_num, get_game_tree_size);
         float lv = (atof(get_correct_num) / atof(get_game_tree_size)) * 10;
-        if (lv >= 0 && lv <= 3)
+        if (lv >= 0 && lv < 5)
             gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, line, -1, "red_fg", NULL);
-        else if (lv >= 3 && lv <= 6)
-            gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, line, -1, "orange_fg", NULL);
-        else if (lv >= 6 && lv <= 8)
+        else if (lv >= 5 && lv < 8)
             gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, line, -1, "yellow_fg", NULL);
-        else 
+        else
             gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, line, -1, "green_fg", NULL);
-
         index = 0;
         memset(buf, '\0', 100);
     }
