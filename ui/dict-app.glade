@@ -55,6 +55,7 @@ Phùng Đình Sơn		20184189
     <property name="height_request">312</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Mở rộng</property>
+    <property name="resizable">False</property>
     <child type="titlebar">
       <placeholder/>
     </child>
@@ -255,6 +256,7 @@ Phùng Đình Sơn		20184189
     <property name="height_request">581</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Luyện tập</property>
+    <property name="resizable">False</property>
     <property name="deletable">False</property>
     <child type="titlebar">
       <placeholder/>
@@ -568,9 +570,9 @@ Phùng Đình Sơn		20184189
     </style>
   </object>
   <object class="GtkWindow" id="window_game_history">
-    <property name="width_request">438</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Lịch sử luyện tập</property>
+    <property name="resizable">False</property>
     <property name="default_width">440</property>
     <property name="default_height">250</property>
     <child type="titlebar">
@@ -753,8 +755,8 @@ Phùng Đình Sơn		20184189
             <property name="receives_default">True</property>
             <property name="always_show_image">True</property>
             <signal name="clicked" handler="translate" swapped="no"/>
-            <accelerator key="Return" signal="clicked"/>
             <accelerator key="Return" signal="activate"/>
+            <accelerator key="Return" signal="clicked"/>
             <style>
               <class name="button"/>
             </style>
@@ -1070,7 +1072,8 @@ Phùng Đình Sơn		20184189
   </object>
   <object class="GtkWindow" id="window_note">
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Danh sách từ khó </property>
+    <property name="title" translatable="yes">Danh sách từ ghi chú</property>
+    <property name="resizable">False</property>
     <property name="default_width">440</property>
     <property name="default_height">250</property>
     <child type="titlebar">
@@ -1157,6 +1160,7 @@ Phùng Đình Sơn		20184189
     <property name="height_request">484</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Bộ lọc câu hỏi</property>
+    <property name="resizable">False</property>
     <child type="titlebar">
       <placeholder/>
     </child>
