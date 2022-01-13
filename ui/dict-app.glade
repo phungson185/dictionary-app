@@ -307,6 +307,7 @@ Phùng Đình Sơn		20184189
             <property name="xalign">0.5</property>
             <attributes>
               <attribute name="font-desc" value="Sarai Bold 30"/>
+              <attribute name="foreground" value="#24248a89d8d8"/>
             </attributes>
             <style>
               <class name="eng"/>
@@ -395,6 +396,7 @@ Phùng Đình Sơn		20184189
             <property name="receives_default">True</property>
             <property name="xalign">0</property>
             <signal name="clicked" handler="new_question" swapped="no"/>
+            <accelerator key="n" signal="activate"/>
             <style>
               <class name="button"/>
             </style>
@@ -561,6 +563,66 @@ Phùng Đình Sơn		20184189
           <packing>
             <property name="x">913</property>
             <property name="y">511</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="label" translatable="yes">   Thêm ghi chú</property>
+            <property name="width_request">137</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="xalign">1</property>
+            <signal name="clicked" handler="game_add_to_note" swapped="no"/>
+            <style>
+              <class name="button"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">887</property>
+            <property name="y">75</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="label" translatable="yes">Xóa ghi chú</property>
+            <property name="width_request">137</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="xalign">0.76999998092651367</property>
+            <signal name="clicked" handler="game_delete_from_note" swapped="no"/>
+            <style>
+              <class name="button"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">888</property>
+            <property name="y">122</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-about</property>
+            <property name="icon_size">3</property>
+          </object>
+          <packing>
+            <property name="x">890</property>
+            <property name="y">80</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-delete</property>
+            <property name="icon_size">3</property>
+          </object>
+          <packing>
+            <property name="x">897</property>
+            <property name="y">127</property>
           </packing>
         </child>
       </object>
@@ -755,8 +817,8 @@ Phùng Đình Sơn		20184189
             <property name="receives_default">True</property>
             <property name="always_show_image">True</property>
             <signal name="clicked" handler="translate" swapped="no"/>
-            <accelerator key="Return" signal="activate"/>
             <accelerator key="Return" signal="clicked"/>
+            <accelerator key="Return" signal="activate"/>
             <style>
               <class name="button"/>
             </style>

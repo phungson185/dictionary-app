@@ -45,7 +45,6 @@ void start()
     gtk_widget_destroy(window_question_filter);
 }
 
-
 void set_answers(char *vie1, char *vie2, char *vie3, char *vie4)
 {
     set_mean_textview_text(ans_1, vie1);
@@ -94,6 +93,7 @@ void new_question()
     if (!btsel(question_tree, make_long_to_string(key_word_correct), word, MAX, &rsize))
     {
         gtk_label_set_text(question, strtok(word, "^"));
+        strcpy(note_eng, gtk_label_get_text(question));
         strcpy(buffer_correct, strtok(NULL, "^"));
     }
 
@@ -281,4 +281,56 @@ void on_check_vie4_clicked()
         set_correct_num();
     checked = 4;
     is_answed(TRUE);
+}
+
+void game_add_to_note()
+{
+    note = btopn(note_path, 0, 0);
+    char *value = (char *)malloc(sizeof(char) * MAX);
+    int rsize;
+    btpos(dict, ZSTART);
+    btpos(note, ZSTART);
+
+    if (strcmp(note_eng, "") == 0)
+        show_message(window_game, GTK_MESSAGE_ERROR, "ERROR!", "Bạn chưa nhập vào từ cần thêm vào danh sách ghi chú.");
+    else
+    {
+        if (!btsel(note, note_eng, value, MAX, &rsize))
+            show_message(window_game, GTK_MESSAGE_ERROR, "ERROR!", "Từ này đã có trong danh sách ghi chú.");
+        else if (btsel(dict, note_eng, value, MAX, &rsize))
+            show_message(window_game, GTK_MESSAGE_ERROR, "ERROR!", "Từ bạn xóa không có trong từ điển, không thể thêm.");
+        else
+        {
+            if (!btins(note, note_eng, value, MAX))
+                show_message(window_game, GTK_MESSAGE_INFO, "SUCCESS!", "Đã thêm thành công.");
+            else
+                show_message(window_game, GTK_MESSAGE_ERROR, "ERROR!", "Không thể thêm, chương trình lỗi.");
+        }
+    }
+    free(value);
+    btcls(note);
+}
+
+void game_delete_from_note()
+{
+    note = btopn(note_path, 0, 0);
+    char *value = (char *)malloc(sizeof(char) * MAX);
+    int rsize;
+
+    if (strcmp(note_eng, "") == 0)
+        show_message(window_game, GTK_MESSAGE_ERROR, "ERROR!", "Bạn chưa nhập vào từ cần xóa khỏi danh sách ghi chú");
+    else
+    {
+        if (btsel(note, note_eng, value, MAX, &rsize))
+            show_message(window_game, GTK_MESSAGE_ERROR, "ERROR!", "Từ bạn xóa không có trong danh sách ghi chú");
+        else
+        {
+            if (!btdel(note, note_eng))
+                show_message(window_game, GTK_MESSAGE_INFO, "SUCCESS!", "Đã xóa thành công.");
+            else
+                show_message(window_game, GTK_MESSAGE_ERROR, "ERROR!", "Không thể xóa, chương trình lỗi.");
+        }
+    }
+    free(value);
+    btcls(note);
 }

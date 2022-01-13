@@ -28,6 +28,8 @@ long *ques_arr;
 int key_check;
 int checked;
 
+char note_eng[100];
+
 void start();
 void set_answers(char *vie1, char *vie2, char *vie3, char *vie4);
 void new_question();
